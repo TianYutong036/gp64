@@ -10,9 +10,9 @@
 - the system could analyze users’ financial situation and give advice accordingly;
 - the system allows different users keep their accounts by requesting users to enter passwords to log in their own account.
 ## problem setting
-**The system includes two main files:
-A file records personal financial information( balance);
-A file records basic information of income and expenses(amount, date, types of income or expense (e.g. food, game, salary, etc.), account (e.g cash, bank card, credit card, etc.)).**
+**The system includes two main files:**
+**A file records personal financial information(balance);**
+**A file records basic information of income and expenses(`amount`, `date`, `types of income or expense` (e.g. food, game, salary, etc.), `account` (e.g cash, bank card, credit card, etc.)).**
 
 *In the code we will have a few functions for information management:*
 ```
