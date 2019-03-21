@@ -7,23 +7,46 @@
 - users could view their records by date, type, and account; 
 - the system should provide statistical report of users’ financial state (e.g. monthly income and expenses, percentage of food expenses, etc.); 
 - the accounting system allows budget setting. When expenses reach the budget, there should be an alert from the system. 
-- the system could analyze users’ financial situation and give advice accordingly.
+- the system could analyze users’ financial situation and give advice accordingly;
+- the system allows different users keep their accounts by requesting users to enter passwords to log in their own account.
 ## problem setting
 **The system includes two main files:
 A file records personal financial information( balance);
 A file records basic information of income and expenses(amount, date, types of income or expense (e.g. food, game, salary, etc.), account (e.g cash, bank card, credit card, etc.)).**
-In the code we will have a few functions for information management:
+*In the code we will have a few functions for information management:*
 ```
 show_records
 ```
 List all records in a particular month in a file “records.txt”
-`edit_record`
+```
+edit_record
+```
 Allow users to edit one record in the system.
-`delete_record`
+```
+delete_record
+```
 Allow users to delete selected records from the system.
-`add_record`
+```
+add_record
+```
 Add one record of income / expense to the system.
-`monthly_statement`
+```
+monthly_statement
+```
 List out the monthly income, expenses,  balance and debt in a file “monthly statement.txt”
-`financial_analysis`
+```
+financial_analysis
+```
 Calculate the percentage of each type and list them in a file “monthly financial analysis.txt”
+```
+set_budget
+```
+Allow users to set monthly budget.
+```
+user_login
+```
+Users need to log in using their ID and passwords before entering the system for security. User information is stored in a file “user information.txt”(it is unreadable to all the users).
+```
+interest
+```
+Users can set the bank interest when adding a bank account into the system. Then the bank interest income will be added to the balance every month.
