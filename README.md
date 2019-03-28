@@ -44,11 +44,11 @@ List out the monthly income, expenses,  balance and debt in a file “monthly st
 financial_analysis
 ```
 Calculate the percentage of each type and list them in a file “monthly financial analysis.txt” which may include:
-i）liability ratio = expenses on debts/ expenses on cash   
+*i）liability ratio = expenses on debts/ expenses on cash*   
 if the ratio is higher than 25% then the user may face the risk of being deep in debt.
-ii）Engel coefficient = expenses on food / total expenses
+*ii）Engel coefficient = expenses on food / total expenses*
 If the ratio is lower than 30% then the user may have a wealthy life.
-iii) investment-expense ratio = investment expense / total expenses
+*iii) investment-expense ratio = investment expense / total expenses*
 if the ratio is lower than 20% then the user may lack consciousness of financial management.
 
 
