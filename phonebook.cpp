@@ -1,9 +1,4 @@
 // Phonebook Manager (dynamic array version)
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <sstream>
-
 using namespace std;
 
 struct PhoneRec {
@@ -15,7 +10,7 @@ char selection_menu();
 // Print selecltion menu to screen and read user selection
 
 int load_phonebook(string filename, PhoneRec * &pb, int &pb_size);
-// Load phonebook data from a file into the array parameter with a maximium size 
+// Load phonebook data from a file into the array parameter with a maximium size
 // specified by 'pb_size', and return the number of records loaded
 
 void print_phonebook(PhoneRec pb[], int nRec);
@@ -48,10 +43,10 @@ int main()
 {
 	int phonebook_size = 3;
     PhoneRec * phonebook = new PhoneRec[phonebook_size];
-    
+
     int num_records = 0, count;
 	string str;
-		
+
 	char choice = selection_menu();
 	while (choice != '0')
 	{
@@ -61,18 +56,18 @@ int main()
 				cout << "Please enter the filename: ";
 				cin >> str;
 				num_records = load_phonebook(str, phonebook, phonebook_size);
-				cout << endl << num_records << " record(s) loaded." << endl << endl;				
+				cout << endl << num_records << " record(s) loaded." << endl << endl;
 				break;
-				
+
 			case '2':
 				print_phonebook(phonebook, num_records);
 				break;
-				
+
 			case '3':
 				sort_phonebook(phonebook, num_records);
 				print_phonebook(phonebook, num_records);
 				break;
-				
+
 			case '4':
 				cout << "Please enter a name: ";
 				cin >> str;
@@ -80,14 +75,14 @@ int main()
 				count = search_phonebook(str, phonebook, num_records);
 				cout << count << " record(s) found." << endl << endl;
 				break;
-					
+
 			case '5':
 				cout << "Please enter the filename: ";
 				cin >> str;
 				count = save_phonebook(str, phonebook, num_records);
 				cout << endl << count << " record(s) saved." << endl << endl;
 				break;
-				
+
 			case '6':
 				if (num_records >= phonebook_size)
 					grow_phonebook(phonebook, phonebook_size, 3);
@@ -97,7 +92,7 @@ int main()
 				cout << "There are now " << num_records <<
 						" record(s) in the phonebook." << endl << endl;
 				break;
-				
+
 			default:
 				cout << "Invalid input!" << endl;
 		}
@@ -106,7 +101,7 @@ int main()
 
 	cout << "Goodbye!" << endl << endl;
 
-	delete [] phonebook;	
+	delete [] phonebook;
 
 	return 0;
 }
@@ -114,7 +109,7 @@ int main()
 char selection_menu()
 {
 	char choice;
-	
+
 	// print selection menu
 	cout << "********************************" << endl;
 	cout << "* Welcome to Phonebook Manager *" << endl;
@@ -131,7 +126,7 @@ char selection_menu()
 	// read user selection
 	cin >> choice;
 	cout << endl;
-	
+
 	return choice;
 }
 
@@ -144,14 +139,14 @@ int load_phonebook(string filename, PhoneRec * &pb, int &pb_size)
         cout << "Error in file opening." << endl;
         return 0;
     }
-    
+
     int i = 0;
     string line;
     while (getline(fin, line))
     {
 		if (i >= pb_size)
 			grow_phonebook(pb, pb_size, 3);
-			
+
 		// extract a name and a phone no. from a line
 		if (i < pb_size) {
 	        istringstream iss(line);
@@ -163,7 +158,7 @@ int load_phonebook(string filename, PhoneRec * &pb, int &pb_size)
 	    }
 
     }
-        
+
     fin.close();
     return i;
 }
@@ -171,7 +166,7 @@ int load_phonebook(string filename, PhoneRec * &pb, int &pb_size)
 void print_phonebook(PhoneRec pb[], int nRec)
 {
     int i;
-    
+
     for (i = 0; i < nRec; i++)
     {
         cout << "Name:\t" << pb[i].name << endl;
@@ -188,7 +183,7 @@ void sort_phonebook(PhoneRec pb[], int nRec)
     {
         min = pb[i].name;
         idx = i;
-        
+
         for (j = i + 1; j < nRec; j++)
         {
             if (pb[j].name < min)
@@ -197,14 +192,14 @@ void sort_phonebook(PhoneRec pb[], int nRec)
                 idx = j;
             }
         }
-        
+
         if (idx != i)
         {
             PhoneRec temp;
             // swap pb[i] & pb[idx]
             temp    = pb[i];
             pb[i]   = pb[idx];
-            pb[idx] = temp;           
+            pb[idx] = temp;
         }
     }
 }
@@ -246,7 +241,7 @@ int save_phonebook(string filename, PhoneRec pb[], int nRec)
     {
         fout << pb[i].name << "," << pb[i].phone_no << endl;
     }
-    
+
     fout.close();
     return i;
 }
@@ -255,7 +250,7 @@ int add_record(PhoneRec pb[], int nRec)
 {
 	char ans;
 	string str;
-	
+
 	getline(cin, str); // flush the keyboard buffer
 	cout << "Please enter a name: ";
 	getline(cin, pb[nRec].name);
@@ -271,7 +266,7 @@ int add_record(PhoneRec pb[], int nRec)
 		cout << "1 record added." << endl;
 		nRec++;
 	}
-		
+
 	return nRec;
 }
 
@@ -283,7 +278,7 @@ string upper_case(string str)
 		if (str[i] >= 'a' && str[i] <= 'z')
 			str[i] = str[i] - 'a' + 'A';
 	}
-	
+
 	return str;
 }
 
@@ -291,7 +286,7 @@ void grow_phonebook(PhoneRec * &pb, int &pb_size, int n)
 {
 	// create a new dynamic array with a new size = max_size + n
 	PhoneRec * pb_new = new PhoneRec[pb_size + n];
-	
+
 	// copy all the records from the original array to the new dynamic array
 	for (int i = 0; i < pb_size; i++)
 	{
@@ -306,6 +301,6 @@ void grow_phonebook(PhoneRec * &pb, int &pb_size, int n)
 	pb_size += n;
 
 	cout << "---> phonebook size enlarged to hold a maximum of " << pb_size << " records." << endl;
-	
+
 	return;
 }
