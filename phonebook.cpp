@@ -1,10 +1,4 @@
 // Phonebook Manager (dynamic array version)
-using namespace std;
-
-struct PhoneRec {
-    string name;
-    string phone_no;
-};
 
 char selection_menu();
 // Print selecltion menu to screen and read user selection
