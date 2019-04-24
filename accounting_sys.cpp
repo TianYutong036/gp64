@@ -6,6 +6,9 @@
 
 using namespace std;
 
+int max_num=1000;
+//set limited number of the records.
+
 class User{
 public:
   string username = "Kit";
@@ -264,7 +267,10 @@ void search_record(Record ar[], int rnum){
 //啥都没写！！
 }
 
-void monthly_statement(Record ar[], int rnum){
+void monthly_statement(Record ar[], int rnum, string year, string month){
+  Record *nr= new Record[max_num];
+  double total_expense=0, food_expense=0, fixed_expense=0, commodity_expense=0, entertainment_expense=0;
+  double total_income=0, 
 }
 
 void financial_analysis(Record ar[], int rnum){
