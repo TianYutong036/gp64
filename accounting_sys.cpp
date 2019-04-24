@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -18,23 +19,28 @@ public:
 class Record{
 public:
   string date,note;
-  int amount,type;
+  double amount;
+  int type,account;
   char sign;
 };
 
-string itos(int n){
-  //fuction: convert int to string
-  //input:int n
-  //output:n in string type
+class Account{
+  string name;
+  double balance;
+};
+
+char sign_select[2] = {'+','-'};
+
+string dtos(double n){
+  //fuction: convert a double number into string format.
   ostringstream stream;
-  stream<<n;
+  stream << n;
   return stream.str();
 }
 
 bool User :: user_login(){
+  //completed！！！！！
   //function: to check the username and password for login(3 attempts to enter the password).
-  //input: username and password.
-  //output: return false if all three are wrong,return true otherwise.
   int i = 3;
   string un;
   while (1){
@@ -63,6 +69,7 @@ bool User :: user_login(){
 }
 
 void User :: set_budget(){
+  //completed!!!
   int x;
   cout << "Please enter the budget:";
   cin >> x;
@@ -71,9 +78,8 @@ void User :: set_budget(){
 }
 
 void User :: set_password(){
+  //completed !!!!
   //function:reset the password.
-  //input:None.
-  //output:None.
   string pw, pwcheck;
   cout << "Please enter the original password:";
   cin >> pw;
@@ -86,13 +92,29 @@ void User :: set_password(){
     cin >> pw;
     cout << "Re-enter the new password:";
     cin >>pwcheck;
-    if (pw == pwcheck){
+    while (pw != pwcheck){
+      cout << "Wrong pastword entered! Please try again." << endl;
+      cout << "Re-enter the new password:";
+      cin >>pwcheck;
+    }
       cout << "Password motified successfully."<< endl;
       password = pw;
-    }
 }
 
-void load_record(string filename, Record * &ar, int &num){
+void grow_record(Record * &ar, int &num){
+  //completed !!!!
+  //function: enlarge the array if more records need to be added in.
+  Record * ar_new = new Record [2 * num];
+  for (int i = 0; i < num; i++){
+    ar_new[i] = ar[i];
+  }
+  delete [] ar;
+  ar = ar_new;
+  num *= 2;
+}
+
+int load_record(string filename, Record * &ar, int &rnum){
+  //completed!!!
   ifstream fin;
   fin.open(filename.c_str());
   if (fin.fail()){
@@ -103,99 +125,78 @@ void load_record(string filename, Record * &ar, int &num){
   string line;
   while(getline(fin, line)){
     if (i >= num){
-      grow_record(ar,num);
+      grow_record(ar, num);
     }
     if (i < num){
-      istringstream iss(line);
-      if (!getline(iss, ar[i].date,','))
-        break;
-      if (!getline(iss, ar[i].type,','))
-        break;
-      if (!getline(iss, ar[i].sign,','))
-        break;
-      if (!getline(iss, ar[i].amount,','))
-        break;
-      if (!getline(iss, ar[i].note))
-        break;
+      istringstream line_in(line);
+      line_in >> ar[i].date;
+      line_in >> ar[i].type;
+      line_in >> ar[i].account;
+      line_in >> ar[i].sign;
+      line_in >> ar[i].amount;
+      line_in >> ar[i].note;
       i++;
     }
   }
   fin.close();
+  return i;
 }
 
-void grow_record(Record * &ar, int &num){
-  //
-  //
-  //
-  ar_new = new Record [2 * num];
-  for (int i = 0; i < num; i++){
-    ar_new[i] = ar[i];
-  }
-  delete [] ar;
-  ar = ar_new;
-  num *= 2;
-}
-
-void show_record(Record ar[], int num){
+void show_record(Record ar[], Account ac[], int rnum){
+  ///我还没写account list！！！！！
   //function:print out all records in the file.
-  //input:the array of all the records, the number of records.
-  //output:None.
     for(int i = 0; i < num; i++){
-    string amount = ar[i].sign + itos(ar[i].amount);
+    string amount = ar[i].sign + dtos(ar[i].amount);
     cout << setw(7) << "Number" << setw(12) << "Date" << setw(10) << "Type" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
     cout << setw(7) << i+1 << setw(12) << ar[i].date << setw(10) << ar[i].type << setw(10) << amount << setw(20) << ar[i].note << endl;
   }
 }
 
-void edit_record(Record &ar[], int num){
+void edit_record(Record ar[], int rnum){
+  //account list 没写！！！
   //function:edit one record in the file.
-  //input:the array of all the records, the number of records.
-  //output:None.
-  show_record(ar[],num);
-  int x, amount;
+  show_record(ar,num);
+  int x, amount, t;
   char ans;
   string correction;
   cout << "Please choose the record to edit:";
   cin >> x;
 
-  cout << "Change the date(Y/N)?"
+  cout << "Change the date(Y/N)?";
   cin >> ans;
   if (ans == 'Y'){
     cout << "Please enter the date:";
-    cin >> correction;
-    ar[x-1].date = correction;
+    cin >> ar[x-1].date;
   }
 
-  cout << "Change the type(Y/N)?"
+  cout << "Change the type(Y/N)?";
   cin >> ans;
   if (ans == 'Y'){
     cout << "Please enter the type:";
-    cin >> correction;
-    ar[x-1].type = correction;
+    cin >> ar[x-1].type;
   }
 
-  cout << "Change the amount(Y/N)?"
+  cout << "Change the amount(Y/N)?";
   cin >> ans;
   if (ans == 'Y'){
     cout << "Please enter the amount:";
-    cin >> amount;
-    ar[x-1].amount = amount;
+    cin >> ar[x-1].amount;
   }
-  cout << "Change the note(Y/N)?"
+  cout << "Change the note(Y/N)?";
   cin >> ans;
   if (ans == 'Y'){
     cout << "Please enter the note:";
-    cin >> correction;
-    ar[x-1].note = correction;
+    cin >> ar[x-1].note;
   }
   cout << "Modify completed!"<< endl;
 }
 
-void delete_record(Record &ar[], int &num){
+void delete_record(Record ar[], int &rnum){
+  //balance modify没写！！！
   //function:delete one record in the file.
   //input:the array of all the records, the number of records.
   //output:None.
-  show_record(ar[],num);
+  show_record(ar,num);
   char ans;
   int x;
   cout << "Please choose the record to edit:";
@@ -215,48 +216,63 @@ void delete_record(Record &ar[], int &num){
   }
 }
 
-void add_record(Record &ar[], int &num){
-  //
-  //
-  //
+void add_record(Record ar[], Account ac[], int &rnum){
+  //不知道account能不能用！！！
+  //function: add new record to the account.
 	string str;
 	getline(cin, str); // flush the keyboard buffer
+  int i;
+  double d;
+  cout << "If it is an income record please enter 0, otherwise please enter 1:";
+  cin >> i;
+  ar[rnum].sign = sign_select[i];
 	cout << "Please enter the date: ";
-	getline(cin, new_list[num].date);
+	cin >> str;
+  ar[rnum].date = str;
 	cout << "Please enter the type: ";
-	getline(cin, new_list[num].type);
+	cin >> i;
+  ar[rnum].type = i;
+  cout << "Please choose the account:";
+  //打印account
+  cin >> i;
+  ar[rnum].account = i;
   cout << "Please enter the amount: ";
-  getline(cin, new_list[num].amount);
+  cin >> d;
+  ar[rnum].amount = d;
   cout << "Please enter the note: ";
-  getline(cin, new_list[num].note);
-	cout << "Date:\t" << new_list[nRec].date << endl;
-  cout << "Type:\t" << new_list[nRec].type << endl << endl;
-  cout << "Amount:\t" << pb[nRec].amount << endl << endl;
-  cout << "Note:\t" << pb[nRec].note << endl << endl;
+  cin >> str;
+  ar[rnum].note = str;
+	cout << "Date:\t" << ar[rnum].date << endl<< endl;
+  cout << "Type:\t" << ar[rnum].type << endl << endl;
+  cout << "Account:\t" << ac[ar[num].account] << endl << endl;
+  cout << "Amount:\t" << ar[rnum].sign << ar[rnum].amount << endl << endl;
+  cout << "Note:\t" << ar[rnum].note << endl << endl;
   cout << "Add to record (Y/N)? ";
+  char ans;
 	cin >> ans;
 	if (ans == 'Y'){
     cout << "1 record added." << endl;
-		num++;
+		rnum++;
 	}
 }
 
-void sort_record(Record &ar[], int num){
-
+void sort_record(Record ar[], int rnum){
+//啥都没写！！
 }
 
-void search_record(Record ar[], int num){
-
+void search_record(Record ar[], int rnum){
+//啥都没写！！
 }
 
-void monthly_statement(Record ar[], int num){
+void monthly_statement(Record ar[], int rnum){
 }
 
-void financial_analysis(Record ar[], int num){
+void financial_analysis(Record ar[], int rnum){
 }
 
-char selection_menu(){
-	char choice;
+string selection_menu(){
+  //可能还有更多功能要加！！！
+	string choice;
 
 	// print selection menu
   cout << "1. Add a new record." << endl;
@@ -268,6 +284,7 @@ char selection_menu(){
   cout << "7. Set budget." << endl;
   cout << "8. Sort the records by date or amount." <<endl;
   cout << "9. Change login password." << endl;
+  cout << "10. Add an account." << endl;
   cout << "0. Quit. " << endl;
   cout << "Please enter your choice: ";
 
@@ -283,43 +300,49 @@ int main(){
   cout << "********************************" << endl;
   cout << "* Welcome to Accounting system *" << endl;
   cout << "********************************" << endl;
-  bool flag = user.user_login(user);//check user name and password
+  bool flag = user.user_login();//check user name and password
   if (flag){
     int num = 3;
     Record * ar = new Record [num];
     string str;
     cout << "Please enter the filename to import records: ";
     cin >> str;
-    load_record(str, ar, num);
-    char choice = selection_menu();
-    while (choice != '0'){
+    int rnum = load_record(str, ar, num);
+    string choice = selection_menu();
+    while (choice != "0"){
       switch (choice){
-        case '1':
-          add_record(ar, num);
+        case "1":
+          if (rnum >= num){
+            grow_record(ar, num);
+          }
+          add_record(ar, rnum);
           break;
-        case '2':
-          show_record(ar, num);
+        case "2":
+          show_record(ar, rnum);
           break;
-        case '3':
-          edit_record(ar, num);
+        case "3":
+          edit_record(ar, rnum);
           break;
-        case '4':
-          search_record(ar, num);
+        case "4":
+          search_record(ar, rnum);
           break;
-        case '5':
-          monthly_statement(ar,num);
+        case "5":
+          monthly_statement(ar,rnum);
           break;
-        case '6':
-          financial_analysis(ar, num);
+        case "6":
+          financial_analysis(ar, rnum);
           break;
-        case '7':
+        case "7":
           user.set_budget();
           break;
-        case '8':
-          sort_record(ar, num);
+        case "8":
+          sort_record(ar, rnum);
           break;
-        case '9':
+        case "9":
           user.set_password();
+          break;
+        case "10":
+          add_account(ac,anum);
           break;
         default:
           cout << "Invalid input!" << endl;
