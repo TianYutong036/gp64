@@ -383,7 +383,30 @@ void financial_analysis(double debt_ratio, double food_ratio, double expenses_ra
   fout<<fixed<<setprecision(2);
   fout<<"******** Monthli Statement ********"<<endl;
   fout<<"********** "<<year<<", "<<month<<" **********"<<endl;
-
+  fout<<endl;
+  fout<<"Liability ratio = "<<debt_ratio<<'%'<<endl;
+  if(debt_ratio>25){
+    fout<<"Liability ratio is too high. You may face the risk of being deep in debt!"
+  }
+  else{
+    fout<<"Liability ratio is normal. You may not face debt risk!"
+  }
+  fout<<endl;
+  fout<<"Engel Ratio = "<<food_ratio<<'%'<<endl;
+  if(food_ratio>30){
+    fout<<"Keep moving! You can be richer!"
+  }
+  else{
+    fout<<"Congratulations! You are living a wealthy life!"
+  }
+  fout<<endl;
+  fout<<"Expense ratio = "<<expenses_ratio<<'%'<<endl;
+  if(expenses_ratio>70){
+    fout<<"Spent too much! You need to save money!"
+  }
+  else{
+    fout<<"Expense ratio is normal. Good Job!"
+  }
 }
 
 string selection_menu(){
