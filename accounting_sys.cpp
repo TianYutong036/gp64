@@ -285,7 +285,7 @@ void monthly_statement(Record ar[], int rnum, string year, string month){
   }
   //get all records of the exact month.
   double total_expense=0, food_expense=0, fixed_expense=0, commodity_expense=0, entertainment_expense=0;
-  double total_income=0, earned_income=0, portfolio_income=0, passive_income=0;
+  double total_income=0, earned_income=0, portfolio_income=0, passive_income=0, debt_expense=0;
   for(int i=0;i<j;i++){
     if(nr[i].type=="food_expense"){
       food_expense+=nr[i].amount;
@@ -316,11 +316,74 @@ void monthly_statement(Record ar[], int rnum, string year, string month){
       total_income+=nr[i].amount;
     }
   }
+  for(int i=0;i<j;i++){
+    if(nr[i].account.name=="credit card"){
+      debt_expense+=nr[i].amount;
+    }
+  }
   //calculate total amount of different types.
-  
+  double food_ratio=food_expense/total_expense*100;
+  double fixed_ratio=fixed_expense/total_expense*100;
+  double commodity_ratio=commodity_expense/total_expense*100;
+  double entertainment_ratio=entertainment_expense/total_expense*100;
+  double earned_ratio=earned_income/total_income*100;
+  double portfolio_ratio=portfolio_income/total_income*100;
+  double passive_ratio=passive_income/total_income*100;
+  double expenses_ratio=total_expense/total_income*100;
+  double debt_ratio=debt_expense/total_expense*100;
+  //calculate ratios.
+  string filename="statement_of_"+year+"_"+month;
+  ofstream fout;
+  fout.open(filename.c_str());
+  if(fout.fail()){
+    cout<<"Opening "<<filename<<".txt failed."<<endl;
+    exit(1);
+  }
+  fout<<fixed<<setprecision(2);
+  fout<<"******** Monthli Statement ********"<<endl;
+  fout<<"********** "<<year<<", "<<month<<" **********"<<endl;
+  fout<<"Income: "<<endl;
+  fout<<"  Earned income --------"<<earned_income<<"   "<<earned_ratio<<'%'<<endl;
+  fout<<"  Portfolio income --------"<<portfolio_income<<"   "<<portfolio_ratio<<'%'<<endl;
+  fout<<"  Passive Earned income --------"<<passive_income<<"   "<<passive_ratio<<'%'<<endl;
+  fout<<"Total income ----------------"<<total_income<<endl;
+  fout<<endl;
+  fout<<"Expenses: "<<endl;
+  fout<<"  Food expense --------"<<food_expense<<"   "<<food_ratio<<'%'<<endl;
+  fout<<"  Fixed expense --------"<<fixed_expense<<"   "<<fixed_ratio<<'%'<<endl;
+  fout<<"  Commodity expense --------"<<commodity_expense<<"   "<<commodity_ratio<<'%'<<endl;
+  fout<<"  Entertainment expense --------"<<entertainment_expense<<"   "<<entertainment_ratio<<'%'<<endl;
+  fout<<"Total expense ----------------"<<total_expense<<endl;
+  fout<<endl;
+  fout<<"  Expense on debt --------"<<debt_expense<<"   "<<debt_ratio<<'%'<<endl;
+  fout<<endl;
+  fout<<"  Expense over income --------"<<expenses_ratio<<'%'<<endl;
+  fout.close()
+  delete []nr;
+  //print monthly statement into the file.
+  cout<<"Monthly statement has successfully stored in "<<filename<<".tct!"<<endl;
+  cout<<"Please enter the choice:"<<endl;
+  cout<<"0. Back to main menu."<<endl;
+  cout<<"1. Show financial analysis."<<endl;
+  char choice;
+  cin>>choice;
+  if(choice=='1'){
+    financial_analysis(debt_ratio,food_ratio,expenses_ratio,analysis_name);
+  }
 }
 
-void financial_analysis(Record ar[], int rnum){
+void financial_analysis(double debt_ratio, double food_ratio, double expenses_ratio, string year, string month){
+  string filename="financial_analysis_"+year+"_"+month;
+  ofstream fout;
+  fout.open(filename.c_str());
+  if(fout.fail()){
+    cout<<"Opening "<<filename<<".txt failed."<<endl;
+    exit(1);
+  }
+  fout<<fixed<<setprecision(2);
+  fout<<"******** Monthli Statement ********"<<endl;
+  fout<<"********** "<<year<<", "<<month<<" **********"<<endl;
+
 }
 
 string selection_menu(){
