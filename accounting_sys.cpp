@@ -19,18 +19,25 @@ public:
   void set_budget();
 };
 
-class Record{
-public:
-  string date,note;
-  double amount;
-  int type,account;
-  char sign;
-};
-
-class Account{
+struct Account{
   string name;
   double balance;
 };
+
+struct Date{
+  string year, month, day
+};
+
+class Record{
+public:
+  string note;
+  Date date;
+  Account account;
+  double amount;
+  int type;
+  char sign;
+};
+
 
 char sign_select[2] = {'+','-'};
 
@@ -269,8 +276,48 @@ void search_record(Record ar[], int rnum){
 
 void monthly_statement(Record ar[], int rnum, string year, string month){
   Record *nr= new Record[max_num];
+  int j=0;
+  for(int i=0;i<rnum;i++){
+    if(ar[i].date.year==year && ar[i].date.month==month){
+      nr[j]=ar[i];
+      j++;
+    }
+  }
+  //get all records of the exact month.
   double total_expense=0, food_expense=0, fixed_expense=0, commodity_expense=0, entertainment_expense=0;
-  double total_income=0, 
+  double total_income=0, earned_income=0, portfolio_income=0, passive_income=0;
+  for(int i=0;i<j;i++){
+    if(nr[i].type=="food_expense"){
+      food_expense+=nr[i].amount;
+      total_expense+=nr[i].amount;
+    }
+    else if(nr[i].type=="fixed_expense"){
+      fixed_expense+=nr[i].amount;
+      total_expense+=nr[i].amount;
+    }
+    else if(nr[i].type=="commodity_expense"){
+      commodity_expense+=nr[i].amount;
+      total_expense+=nr[i].amount;
+    }
+    else if(nr[i].type=="entertainment_expense"){
+      entertainment_expense+=nr[i].amount;
+      total_expense+=nr[i].amount;
+    }
+    else if(nr[i].type=="earned_income"){
+      earned_income+=nr[i].amount;
+      total_income+=nr[i].amount;
+    }
+    else if(nr[i].type=="portfolio_income"){
+      portfolio_income+=nr[i].amount;
+      total_income+=nr[i].amount;
+    }
+    else if(nr[i].type=="passive_income"){
+      passive_income+=nr[i].amount;
+      total_income+=nr[i].amount;
+    }
+  }
+  //calculate total amount of different types.
+  
 }
 
 void financial_analysis(Record ar[], int rnum){
