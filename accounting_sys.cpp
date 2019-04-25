@@ -6,17 +6,16 @@
 
 using namespace std;
 
-int max_num=1000;
-//set limited number of the records.
-
 class User{
 public:
-  string username = "Kit";
-  string password = "000000";
-  int budget;
   bool user_login();
   void set_password();
   void set_budget();
+
+private:
+  string username = "Kit";
+  string password = "000000";
+  int budget;
 };
 
 struct Account{
@@ -28,13 +27,12 @@ struct Date{
   string year, month, day
 };
 
-class Record{
-public:
+struct Record{
   string note;
   Date date;
   Account account;
   double amount;
-  int type;
+  string type;
   char sign;
 };
 
@@ -240,8 +238,48 @@ void add_record(Record ar[], Account ac[], int &rnum){
 	cin >> str;
   ar[rnum].date = str;
 	cout << "Please enter the type: ";
+  cout<<"1. expenses"<<endl;
+  cout<<"2. income"<<endl;
 	cin >> i;
-  ar[rnum].type = i;
+  if(i==1){
+    cout<<"1. food expense"<<endl;
+    cout<<"2. fixed expense"<<endl;
+    cout<<"3. commodity expense"<<endl;
+    cout<<"4. entertainment expense"<<endl;
+    cin>>i;
+    switch(i){
+      case 1:
+        ar[rnum].type = "food_expense";
+        break;
+      case 2:
+        ar[rnum].type = "fixed_expense";
+        break;
+      case 3:
+        ar[rnum].type = "commodity_expense";
+        break;
+      case 4:
+        ar[rnum].type = "entertainment_expense";
+        break;
+    }
+  }
+  else if(i==2){
+    cout<<"1. earned income"<<endl;
+    cout<<"2. portfolio income"<<endl;
+    cout<<"3. passive income"<<endl;
+    cin>>i;
+    switch(i){
+      case 1:
+        ar[rnum].type = "earned_income";
+        break;
+      case 2:
+        ar[rnum].type = "portfolio_income";
+        break;
+      case 3:
+        ar[rnum].type = "passive_income";
+        break;
+    }
+  }
+
   cout << "Please choose the account:";
   //打印account
   cin >> i;
@@ -275,7 +313,7 @@ void search_record(Record ar[], int rnum){
 }
 
 void monthly_statement(Record ar[], int rnum, string year, string month){
-  Record *nr= new Record[max_num];
+  Record *nr= new Record[rnum];
   int j=0;
   for(int i=0;i<rnum;i++){
     if(ar[i].date.year==year && ar[i].date.month==month){
@@ -436,6 +474,8 @@ string selection_menu(){
 
 int main(){
   User user;
+  Account ac[3]={{"cash",0},{"bank card",0},{"credit card",0}};
+
   cout << "********************************" << endl;
   cout << "* Welcome to Accounting system *" << endl;
   cout << "********************************" << endl;
