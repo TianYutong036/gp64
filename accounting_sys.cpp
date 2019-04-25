@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <cmath>
 
 using namespace std;
 
@@ -11,8 +12,6 @@ public:
   bool user_login();
   void set_password();
   void set_budget();
-
-private:
   string username;
   string password;
   int budget;
@@ -23,8 +22,10 @@ struct Account{
   double balance;
 };
 
-struct Date{
-  string year, month, day
+class Date{
+public:
+  string year, month, day;
+  string showdate();
 };
 
 struct Record{
@@ -36,9 +37,6 @@ struct Record{
   int sign;
 };
 
-
-char sign_select[2] = {'+','-'};
-
 string dtos(double n){
   //fuction: convert a double number into string format.
   ostringstream stream;
@@ -47,7 +45,6 @@ string dtos(double n){
 }
 
 bool User :: user_login(){
-  //completed！！！！！
   //function: to check the username and password for login(3 attempts to enter the password).
   int i = 3;
   string un;
@@ -71,13 +68,14 @@ bool User :: user_login(){
     if (i == 0){
       return false;
     }
+
     cout << "Incorrect password. Please try again."<<endl;
     cout << "Password:";
   }
 }
 
 void User :: set_budget(){
-  //completed!!!
+  //function: to set a monthly budget.
   int x;
   cout << "Please enter the budget:";
   cin >> x;
@@ -86,140 +84,236 @@ void User :: set_budget(){
 }
 
 void User :: set_password(){
-  //completed !!!!
   //function:reset the password.
   string pw, pwcheck;
   cout << "Please enter the original password:";
   cin >> pw;
+
   while (pw != password){
     cout << "Wrong password. Please try again." << endl;
     cout << "Please enter the original password:";
     cin >> pw;
   }
+
     cout << "Please enter the new password:";
     cin >> pw;
     cout << "Re-enter the new password:";
     cin >>pwcheck;
+
     while (pw != pwcheck){
       cout << "Wrong pastword entered! Please try again." << endl;
       cout << "Re-enter the new password:";
       cin >>pwcheck;
     }
+
       cout << "Password motified successfully."<< endl;
       password = pw;
 }
 
+string Date :: showdate(){
+  //function: print the date in the format of "DD/MM/YYYY".
+  string r = day +'/' + month + '/' + year;
+  return r;
+}
+
+void motify_date(Record ar[],int pos){
+  string date;
+  cin >> date;
+  int n = date.length();
+  for (int i = 0; i < n; ++i){
+    if (date[i] == '/'){
+      date[i] = ' ';
+    }
+  }
+  istringstream out(date);
+  out >> ar[pos].date.day >> ar[pos].date.month >> ar[pos].date.year;
+}
+
+void choose_type(Record ar[], int pos, int &sign) {
+  int i;
+  cout<<"\n1.expense 2.income"<<endl;
+  cout << "Please enter the type:";
+	cin >> i;
+  if (i == 1){
+    sign = -1;
+    cout << endl;
+    cout << "1. food expense" << endl;
+    cout << "2. fixed expense" << endl;
+    cout << "3. commodity expense" << endl;
+    cout << "4. entertainment expense" << endl;
+    cout << "Please enter the type of expense:";
+    cin >> i;
+    switch(i){
+      case 1:
+        ar[pos].type = "food_expense";
+        break;
+      case 2:
+        ar[pos].type = "fixed_expense";
+        break;
+      case 3:
+        ar[pos].type = "commodity_expense";
+        break;
+      case 4:
+        ar[pos].type = "entertainment_expense";
+        break;
+    }
+  }
+  else{
+    cout << "1. earned income" << endl;
+    cout << "2. portfolio income" << endl;
+    cout << "3. passive income" << endl;
+    cout << "Please enter the type of expense:";
+    cin >> i;
+    switch(i){
+      case 1:
+        ar[pos].type = "earned_income";
+        break;
+      case 2:
+        ar[pos].type = "portfolio_income";
+        break;
+      case 3:
+        ar[pos].type = "passive_income";
+        break;
+    }
+  }
+}
+
+void choose_account(Record ar[], Account ac[], int pos){
+  int i;
+  cout<<"\n1.Cash 2.Bank Card 3.Credit Card"<<endl;
+  cout << "Please enter the account:";
+	cin >> i;
+  switch(i){
+    case 1:
+      ar[pos].account=ac[0];
+      break;
+    case 2:
+      ar[pos].account=ac[1];
+      break;
+    case 3:
+      ar[pos].account=ac[2];
+      break;
+  }
+}
+
 void grow_record(Record * &ar, int &num){
-  //completed !!!!
   //function: enlarge the array if more records need to be added in.
   Record * ar_new = new Record [2 * num];
+
   for (int i = 0; i < num; i++){
     ar_new[i] = ar[i];
   }
+
   delete [] ar;
   ar = ar_new;
   num *= 2;
 }
 
-int load_record(string filename, Record * &ar, int &rnum){
-  //completed!!!
+int load_record(string filename, Record * &ar, Account ac[], int &num){
+  //function: import records from file.
   ifstream fin;
   fin.open(filename.c_str());
+
   if (fin.fail()){
     cout << "Failed to open the file." << endl;
     exit(1);
   }
+
   int i = 0;
   string line;
+
   while(getline(fin, line)){
     if (i >= num){
       grow_record(ar, num);
     }
+
     if (i < num){
       istringstream line_in(line);
-      line_in >> ar[i].date;
+      line_in >> ar[i].date.day;
+      line_in >> ar[i].date.month;
+      line_in >> ar[i].date.year;
       line_in >> ar[i].type;
       line_in >> ar[i].account;
-      line_in >> ar[i].sign;
       line_in >> ar[i].amount;
+      ar[i].account.balance += ar[i].amount;
       line_in >> ar[i].note;
       i++;
     }
   }
-  fin.close();
+
+   fin.close();
   return i;
 }
 
-
-
-void show_record(Record ar[], Account ac[], int rnum){
-  ///我还没写account list！！！！！
+void show_record(Record ar[], int rnum){
   //function:print out all records in the file.
-    for(int i = 0; i < num; i++){
+    for(int i = 0; i < rnum; i++){
     string amount = ar[i].sign + dtos(ar[i].amount);
-    cout << setw(7) << "Number" << setw(12) << "Date" << setw(10) << "Type" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
-    cout << setw(7) << i+1 << setw(12) << ar[i].date << setw(10) << ar[i].type << setw(10) << amount << setw(20) << ar[i].note << endl;
+    cout << setw(7) << "Number" << setw(12) << "Date" << setw(10) << "Type" << << setw(10) << "Account" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
+    cout << setw(7) << i+1 << setw(12) << ar[i].date.showdate() << setw(10) << ar[i].type << setw(10) << ar[i].account.name << setw(10) << amount << setw(20) << ar[i].note << endl;
   }
 }
 
 void edit_record(Record ar[], int rnum){
-  //account list 没写！！！
   //function:edit one record in the file.
   show_record(ar,num);
-  int x, amount, t;
-  char ans;
-  string correction;
   cout << "Please choose the record to edit:";
   cin >> x;
+
+  int x;
+  char ans;
+  double amount;
+  int sign = ar[x-1].amount / abs(ar[x-1].amount);
 
   cout << "Change the date(Y/N)?";
   cin >> ans;
   if (ans == 'Y'){
-    cout << "Please enter the date:";
-    cin >> ar[x-1].date;
+    motify_date(ar, x - 1);
   }
 
   cout << "Change the type(Y/N)?";
   cin >> ans;
   if (ans == 'Y'){
-    cout << "Please enter the type:";
-    cin >> ar[x-1].type;
+    choose_type(ar,x - 1, sign);
   }
 
   cout << "Change the amount(Y/N)?";
   cin >> ans;
   if (ans == 'Y'){
+    ar[x-1].account.balance -= ar[x-1].amount;
     cout << "Please enter the amount:";
-    cin >> ar[x-1].amount;
+    cin >> amount;
+    ar[x-1].amount = amount * sign;
+    ar[x-1].account.balance += ar[x-1].amount;
   }
+
   cout << "Change the note(Y/N)?";
   cin >> ans;
   if (ans == 'Y'){
     cout << "Please enter the note:";
-    cin >> ar[x-1].note;
+    getline(cin,ar[x-1].note);
   }
+
   cout << "Modify completed!"<< endl;
 }
 
-void delete_record(Record ar[], int &rnum){
-  //balance modify没写！！！
+void delete_record(Record ar[], Account ac[], int &rnum){
   //function:delete one record in the file.
-  //input:the array of all the records, the number of records.
-  //output:None.
-  show_record(ar,num);
+  show_record(ar,rnum);
   char ans;
   int x;
   cout << "Please choose the record to edit:";
   cin >> x;
   cout << "Delete record " << x << "(Y/N)?";
   cin >> ans;
+
   if (ans == 'Y'){
-    num--;
-    Record * new_r = new Record [num];
+    rnum--;
+    Record * new_r = new Record [rnum];
     for (int i = 0; i < x - 1; i++){
       new_r[i] = ar[i];
     }
-    for (int i = x; i < num; i++){
+    for (int i = x; i < rnum; i++){
       new_r[i] = ar[i];
     }
     ar = new_r;
@@ -227,83 +321,32 @@ void delete_record(Record ar[], int &rnum){
 }
 
 void add_record(Record ar[], Account ac[], int &rnum){
-  //不知道account能不能用！！！
   //function: add new record to the account.
 	string str;
 	getline(cin, str); // flush the keyboard buffer
-  int i;
+  int i,sign = 1;
   double d;
 
 	cout << "Please enter the date: ";
-	cin >> str;
-  ar[rnum].date = str;
-	cout << "Please enter the type: ";
-  cout<<"1. expenses"<<endl;
-  cout<<"2. income"<<endl;
-	cin >> i;
-  if(i==1){
-    ar[rnum].sign = -1;
-    cout<<"1. food expense"<<endl;
-    cout<<"2. fixed expense"<<endl;
-    cout<<"3. commodity expense"<<endl;
-    cout<<"4. entertainment expense"<<endl;
-    cin>>i;
-    switch(i){
-      case 1:
-        ar[rnum].type = "food_expense";
-        break;
-      case 2:
-        ar[rnum].type = "fixed_expense";
-        break;
-      case 3:
-        ar[rnum].type = "commodity_expense";
-        break;
-      case 4:
-        ar[rnum].type = "entertainment_expense";
-        break;
-    }
-  }
-  else if(i==2){
-    ar[rnum].sign = 1;
-    cout<<"1. earned income"<<endl;
-    cout<<"2. portfolio income"<<endl;
-    cout<<"3. passive income"<<endl;
-    cin>>i;
-    switch(i){
-      case 1:
-        ar[rnum].type = "earned_income";
-        break;
-      case 2:
-        ar[rnum].type = "portfolio_income";
-        break;
-      case 3:
-        ar[rnum].type = "passive_income";
-        break;
-    }
-  }
+	motify_date(ar,rnum);
+  choose_type(ar, rnum, sign);
+  choose_account(ar, ac, rnum);
 
-  cout << "Please choose the account:";
-  //打印account
-  cin >> i;
-  ar[rnum].account = i;
   cout << "Please enter the amount: ";
   cin >> d;
   ar[rnum].amount = d * sign;
+  ar[rnum].account.balance += ar[rnum].amount;
+
   cout << "Please enter the note: ";
-  cin >> str;
-  ar[rnum].note = str;
-	cout << "Date:\t" << ar[rnum].date << endl<< endl;
-  cout << "Type:\t" << ar[rnum].type << endl << endl;
-  cout << "Account:\t" << ac[ar[num].account] << endl << endl;
-  cout << "Amount:\t" << ar[rnum].sign << ar[rnum].amount << endl << endl;
-  cout << "Note:\t" << ar[rnum].note << endl << endl;
-  cout << "Add to record (Y/N)? ";
-  char ans;
-	cin >> ans;
-	if (ans == 'Y'){
-    cout << "1 record added." << endl;
-		rnum++;
-	}
+  getline(cin,ar[rnum].note);
+
+	cout << "Date:\t" << ar[rnum].date << endl;
+  cout << "Type:\t" << ar[rnum].type << endl;
+  cout << "Account:\t" << ar[num].account.name << endl;
+  cout << "Amount:\t" << ar[rnum].amount << endl;
+  cout << "Note:\t" << ar[rnum].note << endl;
+  cout << "1 record added." << endl;
+	rnum++;
 }
 
 void sort_record(Record ar[], int rnum){
@@ -313,6 +356,8 @@ void sort_record(Record ar[], int rnum){
 void search_record(Record ar[], int rnum){
 //啥都没写！！
 }
+
+
 
 void monthly_statement(Record ar[], int rnum, string year, string month){
   Record *nr= new Record[rnum];
