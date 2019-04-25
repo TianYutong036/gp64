@@ -18,7 +18,7 @@
 ```
 show_records
 ```
-List all records in a particular month in a file “records.txt”
+Print all records.
 
 ```
 edit_record
@@ -55,14 +55,24 @@ if the ratio is higher than 70% then the user may lack consciousness of financia
 ```
 set_budget
 ```
-Allow users to set monthly budget. When expenses reach the budget, there will be an alert from the system. 
+Allow users to set monthly budget. When expenses reach the budget, there will be an alert from the system.
 
 ```
 user_login
 ```
-User need to log in using their ID and passwords before entering the system for security. User information is stored in a file “user_info.txt”(it is unreadable to the user).
+Users need to log in using their ID and passwords before entering the system for security. User information is stored in a file “user_info.txt”(it is unreadable to the user).
 
 ```
-interest
+sort_record
 ```
-Users can set the bank interest when adding a bank account into the system. Then the bank interest income will be added to the balance every month.
+Sort the records by date or amount.
+
+```
+search_record
+```
+Search the records by partial match of the name.
+
+```
+set_password
+```
+Allow users change passwords.
