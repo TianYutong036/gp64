@@ -16,9 +16,19 @@
 
 *In the code we will have a few functions for information management:*
 ```
+user_login
+```
+Users need to log in using their ID and passwords before entering the system for security. User information is stored in a file “user_info.txt”(it is unreadable to the user).
+
+```
 show_records
 ```
 Print all records.
+
+```
+add_record
+```
+Add one record of income / expense to the system.
 
 ```
 edit_record
@@ -31,9 +41,24 @@ delete_record
 Allow users to delete selected records from the system.
 
 ```
-add_record
+set_budget
 ```
-Add one record of income / expense to the system.
+Allow users to set monthly budget. When expenses reach the budget, there will be an alert from the system.
+
+```
+search_record
+```
+Search the records by date, type or account.
+
+```
+sort_record
+```
+Sort the records by date or amount.
+
+```
+set_password
+```
+Allow users change passwords.
 
 ```
 monthly_statement
@@ -50,29 +75,3 @@ if the ratio is higher than 25% then the user may face the risk of being deep in
 If the ratio is lower than 30% then the user may have a wealthy life.                                                                   
 *iii) expense ratio = total expenses / total income*                                                                   
 if the ratio is higher than 70% then the user may lack consciousness of financial management.                                             
-
-
-```
-set_budget
-```
-Allow users to set monthly budget. When expenses reach the budget, there will be an alert from the system.
-
-```
-user_login
-```
-Users need to log in using their ID and passwords before entering the system for security. User information is stored in a file “user_info.txt”(it is unreadable to the user).
-
-```
-sort_record
-```
-Sort the records by date or amount.
-
-```
-search_record
-```
-Search the records by partial match of the name.
-
-```
-set_password
-```
-Allow users change passwords.
