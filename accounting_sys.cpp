@@ -14,7 +14,7 @@ public:
 
 private:
   string username;
-  string password; 
+  string password;
   int budget;
 };
 
@@ -33,7 +33,7 @@ struct Record{
   Account account;
   double amount;
   string type;
-  char sign;
+  int sign;
 };
 
 
@@ -150,6 +150,8 @@ int load_record(string filename, Record * &ar, int &rnum){
   return i;
 }
 
+
+
 void show_record(Record ar[], Account ac[], int rnum){
   ///我还没写account list！！！！！
   //function:print out all records in the file.
@@ -231,9 +233,7 @@ void add_record(Record ar[], Account ac[], int &rnum){
 	getline(cin, str); // flush the keyboard buffer
   int i;
   double d;
-  cout << "If it is an income record please enter 0, otherwise please enter 1:";
-  cin >> i;
-  ar[rnum].sign = sign_select[i];
+
 	cout << "Please enter the date: ";
 	cin >> str;
   ar[rnum].date = str;
@@ -242,6 +242,7 @@ void add_record(Record ar[], Account ac[], int &rnum){
   cout<<"2. income"<<endl;
 	cin >> i;
   if(i==1){
+    ar[rnum].sign = -1;
     cout<<"1. food expense"<<endl;
     cout<<"2. fixed expense"<<endl;
     cout<<"3. commodity expense"<<endl;
@@ -263,6 +264,7 @@ void add_record(Record ar[], Account ac[], int &rnum){
     }
   }
   else if(i==2){
+    ar[rnum].sign = 1;
     cout<<"1. earned income"<<endl;
     cout<<"2. portfolio income"<<endl;
     cout<<"3. passive income"<<endl;
@@ -286,7 +288,7 @@ void add_record(Record ar[], Account ac[], int &rnum){
   ar[rnum].account = i;
   cout << "Please enter the amount: ";
   cin >> d;
-  ar[rnum].amount = d;
+  ar[rnum].amount = d * sign;
   cout << "Please enter the note: ";
   cin >> str;
   ar[rnum].note = str;
