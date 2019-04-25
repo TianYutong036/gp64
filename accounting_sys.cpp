@@ -13,8 +13,8 @@ public:
   void set_budget();
 
 private:
-  string username = "Kit";
-  string password = "000000";
+  string username;
+  string password; 
   int budget;
 };
 
