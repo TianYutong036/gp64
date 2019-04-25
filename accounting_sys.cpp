@@ -245,6 +245,45 @@ int load_record(string filename, Record * &ar, Account ac[], int &num){
   return i;
 }
 
+void output_record(string filename, record &ar, int &rnum){
+  ofstream fout;
+  fout.open(filename.c_str());
+  if(fout.fail()){
+    cout<<"Failed to output records into "<<filename<<"."<<endl;
+    exit(1);
+  }
+  for(int i=0;i<rnum;i++){
+    fout<<ar[i].date<<" "<<ar[i].type<<" "<<ar[i].account<<" "<<ar[i].amount<<" "<<ar[i].note<<endl;
+  }
+  fout.close();
+}
+
+void User::load_user(User & user){
+  string filename="user_info.txt";
+  ifstream fin;
+  fin.open(filename.c_str());
+  if(fin.fail()){
+    cout<< "Fail to get user information."<<endl;
+    exit(1);
+  }
+    fin>>user.username;
+    fin>>user.password;
+    fin.close();
+}
+
+void User::output_user(User & user){
+  string filename="user_info.txt";
+  ofstream fout;
+  fout.open(filename.c_str());
+  if(fout.fail()){
+    cout<<"Failed to output user information into "<<filename<<"."<<endl;
+    exit(1);
+  }
+  fout<<user.username<<endl;
+  fout<<user.password<<endl;
+  fout.close();
+}
+
 void show_record(Record ar[], int rnum){
   //function:print out all records in the file.
     for(int i = 0; i < rnum; i++){
@@ -417,7 +456,7 @@ void monthly_statement(Record ar[], int rnum, string year, string month){
   double expenses_ratio=total_expense/total_income*100;
   double debt_ratio=debt_expense/total_expense*100;
   //calculate ratios.
-  string filename="statement_of_"+year+"_"+month;
+  string filename="statement_of_"+year+"_"+month+".txt";
   ofstream fout;
   fout.open(filename.c_str());
   if(fout.fail()){
@@ -446,19 +485,50 @@ void monthly_statement(Record ar[], int rnum, string year, string month){
   fout.close()
   delete []nr;
   //print monthly statement into the file.
-  cout<<"Monthly statement has successfully stored in "<<filename<<".tct!"<<endl;
-  cout<<"Please enter the choice:"<<endl;
-  cout<<"0. Back to main menu."<<endl;
-  cout<<"1. Show financial analysis."<<endl;
-  char choice;
-  cin>>choice;
-  if(choice=='1'){
-    financial_analysis(debt_ratio,food_ratio,expenses_ratio,analysis_name);
-  }
+  cout<<"Monthly statement has successfully stored in "<<filename<<"!"<<endl;
 }
 
-void financial_analysis(double debt_ratio, double food_ratio, double expenses_ratio, string year, string month){
-  string filename="financial_analysis_"+year+"_"+month;
+void financial_analysis(Record ar[], int rnum, string year, string month){
+  Record *nr= new Record[rnum];
+  int j=0;
+  for(int i=0;i<rnum;i++){
+    if(ar[i].date.year==year && ar[i].date.month==month){
+      nr[j]=ar[i];
+      j++;
+    }
+  }
+  //get all records of the exact month.
+  double total_expense=0, food_expense=0;
+  double total_income=0, earned_income=0, portfolio_income=0, passive_income=0, debt_expense=0;
+  for(int i=0;i<j;i++){
+    if(nr[i].type=="food_expense"){
+      food_expense+=nr[i].amount;
+      total_expense+=nr[i].amount;
+    }
+    else if(nr[i].type=="fixed_expense"){
+      total_expense+=nr[i].amount;
+    }
+    else if(nr[i].type=="commodity_expense"){
+      total_expense+=nr[i].amount;
+    }
+    else if(nr[i].type=="entertainment_expense"){
+      total_expense+=nr[i].amount;
+    }
+    else {
+      total_income+=nr[i].amount;
+    }
+  }
+  for(int i=0;i<j;i++){
+    if(nr[i].account.name=="credit card"){
+      debt_expense+=nr[i].amount;
+    }
+  }
+  //calculate total amount of different types.
+  double food_ratio=food_expense/total_expense*100;
+  double expenses_ratio=total_expense/total_income*100;
+  double debt_ratio=debt_expense/total_expense*100;
+  //calculate ratios.
+  string filename="financial_analysis_"+year+"_"+month+".txt";
   ofstream fout;
   fout.open(filename.c_str());
   if(fout.fail()){
@@ -492,7 +562,10 @@ void financial_analysis(double debt_ratio, double food_ratio, double expenses_ra
   else{
     fout<<"Expense ratio is normal. Good Job!"
   }
+  fout.close();
+  cout<<"Financial analysis has successfully stored in "<<filename<<"!"<<endl;
 }
+
 
 string selection_menu(){
   //可能还有更多功能要加！！！
@@ -508,7 +581,6 @@ string selection_menu(){
   cout << "7. Set budget." << endl;
   cout << "8. Sort the records by date or amount." <<endl;
   cout << "9. Change login password." << endl;
-  cout << "10. Add an account." << endl;
   cout << "0. Quit. " << endl;
   cout << "Please enter your choice: ";
 
