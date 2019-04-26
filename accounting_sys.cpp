@@ -12,6 +12,8 @@ public:
   bool user_login();
   void set_password();
   void set_budget();
+  void load_user();
+  void output_user();
   string username;
   string password;
   int budget;
@@ -34,7 +36,6 @@ struct Record{
   Account account;
   double amount;
   string type;
-  int sign;
 };
 
 string dtos(double n){
@@ -42,6 +43,28 @@ string dtos(double n){
   ostringstream stream;
   stream << n;
   return stream.str();
+}
+
+string itos(int n){
+  //fuction: convert a integer number into string format.
+  ostringstream stream;
+  stream << n;
+  return stream.str();
+}
+
+void User::load_user(){
+  string filename = "user_info.txt";
+  ifstream fin;
+  fin.open(filename.c_str());
+
+  if (fin.fail()){
+    cout << "Fail to get user information." << endl;
+    exit(1);
+  }
+
+    fin >> username;
+    fin >> password;
+    fin.close();
 }
 
 bool User :: user_login(){
@@ -80,7 +103,7 @@ void User :: set_budget(){
   cout << "Please enter the budget:";
   cin >> x;
   budget = x;
-  cout << "Budget set up."<< endl;
+  cout << "Budget set up."<< endl << endl;
 }
 
 void User :: set_password(){
@@ -110,6 +133,21 @@ void User :: set_password(){
       password = pw;
 }
 
+void User::output_user(){
+  string filename = "user_info.txt";
+  ofstream fout;
+  fout.open(filename.c_str());
+
+  if(fout.fail()){
+    cout << "Failed to output user information into " << filename << "." << endl;
+    exit(1);
+  }
+
+  fout << username << endl;
+  fout << password << endl;
+  fout.close();
+}
+
 string Date :: showdate(){
   //function: print the date in the format of "DD/MM/YYYY".
   string r = day +'/' + month + '/' + year;
@@ -117,6 +155,7 @@ string Date :: showdate(){
 }
 
 void motify_date(Record ar[],int pos){
+  cout << "Please enter the date(DD/MM/YYYY):";
   string date;
   cin >> date;
   int n = date.length();
@@ -233,10 +272,10 @@ int load_record(string filename, Record * &ar, Account ac[], int &num){
       line_in >> ar[i].date.month;
       line_in >> ar[i].date.year;
       line_in >> ar[i].type;
-      line_in >> ar[i].account;
+      line_in >> ar[i].account.name;
       line_in >> ar[i].amount;
-      ar[i].account.balance += ar[i].amount;
       line_in >> ar[i].note;
+      ar[i].account.balance += ar[i].amount;
       i++;
     }
   }
@@ -245,7 +284,7 @@ int load_record(string filename, Record * &ar, Account ac[], int &num){
   return i;
 }
 
-void output_record(string filename, record &ar, int &rnum){
+void output_record(string filename, Record ar[], int &rnum){
   ofstream fout;
   fout.open(filename.c_str());
   if (fout.fail()){
@@ -253,59 +292,28 @@ void output_record(string filename, record &ar, int &rnum){
     exit(1);
   }
   for (int i = 0; i < rnum; i++){
-    fout << ar[i].date << " " << ar[i].type << " " << ar[i].account << " " << ar[i].amount << " " << ar[i].note << endl;
+    fout << ar[i].date.day << " " << ar[i].date.month << " " << ar[i].date.year << " " << ar[i].type << " " << ar[i].account.name << " " << ar[i].amount << " " << ar[i].note << endl;
   }
-  fout.close();
-}
-
-void User::load_user(User & user){
-  string filename = "user_info.txt";
-  ifstream fin;
-  fin.open(filename.c_str());
-
-  if (fin.fail()){
-    cout << "Fail to get user information." << endl;
-    exit(1);
-  }
-
-    fin >> user.username;
-    fin >> user.password;
-    fin.close();
-}
-
-void User::output_user(User & user){
-  string filename = "user_info.txt";
-  ofstream fout;
-  fout.open(filename.c_str());
-
-  if(fout.fail()){
-    cout << "Failed to output user information into " << filename << "." << endl;
-    exit(1);
-  }
-
-  fout << user.username << endl;
-  fout << user.password << endl;
   fout.close();
 }
 
 void show_record(Record ar[], int rnum){
   //function:print out all records in the file.
+  cout << setw(7) << "Number" << setw(12) << "Date" << setw(20) << "Type" << setw(16) << "Account" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
     for(int i = 0; i < rnum; i++){
-    string amount = ar[i].sign + dtos(ar[i].amount);
-    cout << setw(7) << "Number" << setw(12) << "Date" << setw(10) << "Type" << << setw(10) << "Account" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
-    cout << setw(7) << i+1 << setw(12) << ar[i].date.showdate() << setw(10) << ar[i].type << setw(10) << ar[i].account.name << setw(10) << amount << setw(20) << ar[i].note << endl;
+    cout << setw(7) << i+1 << setw(12) << ar[i].date.showdate() << setw(20) << ar[i].type << setw(16) << ar[i].account.name << setw(10) << ar[i].amount << setw(20) << ar[i].note << endl;
   }
 }
 
 void edit_record(Record ar[], int rnum){
   //function:edit one record in the file.
-  show_record(ar,num);
-  cout << "Please choose the record to edit:";
-  cin >> x;
-
   int x;
   char ans;
   double amount;
+  show_record(ar, rnum);
+  cout << "Please choose the record to edit:";
+  cin >> x;
+
   int sign = ar[x-1].amount / abs(ar[x-1].amount);
 
   cout << "Change the date(Y/N)?";
@@ -334,18 +342,18 @@ void edit_record(Record ar[], int rnum){
   cin >> ans;
   if (ans == 'Y'){
     cout << "Please enter the note:";
-    getline(cin, ar[x-1].note);
+    cin >> ar[x-1].note;
   }
 
   cout << "Modify completed!" << endl;
 }
 
-void delete_record(Record ar[], Account ac[], int &rnum){
+void delete_record(Record *&ar, Account ac[], int &rnum){
   //function:delete one record in the file.
   show_record(ar,rnum);
   char ans;
   int x;
-  cout << "Please choose the record to edit:";
+  cout << "Please choose the record to be deleted:";
   cin >> x;
   cout << "Delete record " << x << "(Y/N)?";
   cin >> ans;
@@ -356,11 +364,13 @@ void delete_record(Record ar[], Account ac[], int &rnum){
     for (int i = 0; i < x - 1; i++){
       new_r[i] = ar[i];
     }
-    for (int i = x; i < rnum; i++){
-      new_r[i] = ar[i];
+    for (int i = x; i <= rnum; i++){
+      new_r[i-1] = ar[i];
     }
     ar = new_r;
   }
+
+  cout << "Record " << x << " deleted." << endl << endl;
 }
 
 void add_record(Record ar[], Account ac[], int &rnum){
@@ -370,7 +380,6 @@ void add_record(Record ar[], Account ac[], int &rnum){
   int i,sign = 1;
   double d;
 
-	cout << "Please enter the date: ";
 	motify_date(ar,rnum);
   choose_type(ar, rnum, sign);
   choose_account(ar, ac, rnum);
@@ -381,14 +390,15 @@ void add_record(Record ar[], Account ac[], int &rnum){
   ar[rnum].account.balance += ar[rnum].amount;
 
   cout << "Please enter the note: ";
-  getline(cin,ar[rnum].note);
+  cin>> ar[rnum].note;
 
-	cout << "Date:\t" << ar[rnum].date << endl;
-  cout << "Type:\t" << ar[rnum].type << endl;
-  cout << "Account:\t" << ar[num].account.name << endl;
-  cout << "Amount:\t" << ar[rnum].amount << endl;
-  cout << "Note:\t" << ar[rnum].note << endl;
-  cout << "1 record added." << endl;
+  cout << endl;
+	cout << "Date:" << ar[rnum].date.showdate() << endl;
+  cout << "Type:" << ar[rnum].type << endl;
+  cout << "Account:" << ar[rnum].account.name << endl;
+  cout << "Amount:" << ar[rnum].amount << endl;
+  cout << "Note:" << ar[rnum].note << endl;
+  cout << "1 record added." << endl << endl;
 	rnum++;
 }
 
@@ -399,14 +409,15 @@ void sort_record(Record ar[], int rnum){
   cout << "Choose how to sort the records:";
   cin >> x;
 
+  Date min;
+  double min1;
   switch(x){
     case 1:
-    Date min;
     for (i = 0; i < rnum - 1; i++){
       min = ar[i].date;
       idx = i;
       for (j = i + 1; j < rnum; j++){
-        if (ar[j].date.year < ar[i].date.year || (ar[j].date.year == ar[i].date.year && ar[j].date.month < ar[i].date.month) || (ar[j].date.year == ar[i].date.year && ar[j].date.month == ar[i].date.month && ar[j].date.day < ar[i].date.day)){
+        if (ar[j].date.year < min.year || (ar[j].date.year == min.year && ar[j].date.month < min.month) || (ar[j].date.year == min.year && ar[j].date.month ==min.month && ar[j].date.day < min.day)){
           min = ar[j].date;
           idx = j;
         }
@@ -414,28 +425,27 @@ void sort_record(Record ar[], int rnum){
       if (idx != i){
         Record temp;
         temp = ar[i];
-        ar[i] = ar[j];
-        ar[j] = temp;
+        ar[i] = ar[idx];
+        ar[idx] = temp;
       }
     }
     break;
 
     case 2:
-    double min;
     for (i = 0; i < rnum - 1; i++){
-      min = ar[i].amount;
+      min1 = ar[i].amount;
       idx = i;
       for (j = i + 1; j < rnum; j++){
-        if (ar[j].amount < min){
-          min = ar[j].amount;
+        if (ar[j].amount < min1){
+          min1 = ar[j].amount;
           idx = j;
         }
       }
       if (idx != i){
         Record temp;
         temp = ar[i];
-        ar[i] = ar[j];
-        ar[j] = temp;
+        ar[i] = ar[idx];
+        ar[idx] = temp;
       }
     }
     break;
@@ -455,8 +465,8 @@ void search_record(Record ar[], int rnum){
     for(int i = 0; i < rnum; i++){
       string date = ar[i].date.showdate();
       if (date.find(ans) != -1){
-        cout << setw(7) << "Number" << setw(12) << "Date" << setw(10) << "Type" << << setw(10) << "Account" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
-        cout << setw(7) << i+1 << setw(12) << ar[i].date.showdate() << setw(10) << ar[i].type << setw(10) << ar[i].account.name << setw(10) << amount << setw(20) << ar[i].note << endl;
+        cout << setw(7) << "Number" << setw(12) << "Date" << setw(20) << "Type" << setw(16) << "Account" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
+        cout << setw(7) << i+1 << setw(12) << ar[i].date.showdate() << setw(20) << ar[i].type << setw(16) << ar[i].account.name << setw(10) << ar[i].amount << setw(20) << ar[i].note << endl;
         count++;
       }
     }
@@ -469,8 +479,8 @@ void search_record(Record ar[], int rnum){
     for(int i = 0; i < rnum; i++){
       string type = ar[i].type;
       if (type.find(ans) != -1){
-        cout << setw(7) << "Number" << setw(12) << "Date" << setw(10) << "Type" << << setw(10) << "Account" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
-        cout << setw(7) << i+1 << setw(12) << ar[i].date.showdate() << setw(10) << ar[i].type << setw(10) << ar[i].account.name << setw(10) << amount << setw(20) << ar[i].note << endl;
+        cout << setw(7) << "Number" << setw(12) << "Date" << setw(10) << "Type" << setw(10) << "Account" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
+        cout << setw(7) << i+1 << setw(12) << ar[i].date.showdate() << setw(10) << ar[i].type << setw(10) << ar[i].account.name << setw(10) << ar[i].amount << setw(20) << ar[i].note << endl;
         count++;
       }
     }
@@ -482,9 +492,9 @@ void search_record(Record ar[], int rnum){
     cin >> ans;
     for(int i = 0; i < rnum; i++){
       string account = ar[i].account.name;
-      if (Account.find(ans) != -1){
-        cout << setw(7) << "Number" << setw(12) << "Date" << setw(10) << "Type" << << setw(10) << "Account" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
-        cout << setw(7) << i+1 << setw(12) << ar[i].date.showdate() << setw(10) << ar[i].type << setw(10) << ar[i].account.name << setw(10) << amount << setw(20) << ar[i].note << endl;
+      if (account.find(ans) != -1){
+        cout << setw(7) << "Number" << setw(12) << "Date" << setw(10) << "Type" << setw(10) << "Account" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
+        cout << setw(7) << i+1 << setw(12) << ar[i].date.showdate() << setw(10) << ar[i].type << setw(10) << ar[i].account.name << setw(10) << ar[i].amount << setw(20) << ar[i].note << endl;
         count++;
       }
     }
@@ -583,7 +593,7 @@ void monthly_statement(Record ar[], int rnum){
   fout << "  Expense on debt --------" << debt_expense << "   " << debt_ratio << '%' << endl;
   fout << endl;
   fout << "  Expense over income --------" << expenses_ratio << '%' << endl;
-  fout.close()
+  fout.close();
   delete [] nr;
   //print monthly statement into the file.
   cout << "Monthly statement has successfully stored in " << filename << "!" << endl;
@@ -670,7 +680,7 @@ void financial_analysis(Record ar[], int rnum){
   cout << "Financial analysis has successfully stored in " << filename << "!" << endl;
 }
 
-string selection_menu(){
+int selection_menu(){
   //function:print the selection menu and return user's choice.
 	int choice;
 
@@ -698,7 +708,7 @@ string selection_menu(){
 
 int main(){
   User user;
-  Account ac[3]={{"cash",0},{"bank card",0},{"credit card",0}};
+  Account ac[3]={{"cash",0},{"bank_card",0},{"credit_card",0}};
 
   //print the welcome screen.
   cout << "********************************" << endl;
@@ -714,9 +724,9 @@ int main(){
     string str;
     cout << "Please enter the filename to import records: ";
     cin >> str;
-    int rnum = load_record(str, ar, num);
-    string choice = selection_menu();
-    while (choice != "0"){
+    int rnum = load_record(str, ar, ac, num);
+    int choice = selection_menu();
+    while (choice != 0){
       switch (choice){
         case 1:
           show_record(ar, rnum);
@@ -757,7 +767,7 @@ int main(){
   choice = selection_menu();
     }
   output_record(str, ar, rnum);
-  user.output_user(user);
+  user.output_user();
   cout << "Goodbye!" << endl << endl;
   delete [] ar;
   }
