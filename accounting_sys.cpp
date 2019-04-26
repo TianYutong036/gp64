@@ -248,39 +248,43 @@ int load_record(string filename, Record * &ar, Account ac[], int &num){
 void output_record(string filename, record &ar, int &rnum){
   ofstream fout;
   fout.open(filename.c_str());
-  if(fout.fail()){
-    cout<<"Failed to output records into "<<filename<<"."<<endl;
+  if (fout.fail()){
+    cout << "Failed to output records into " << filename << "." << endl;
     exit(1);
   }
-  for(int i=0;i<rnum;i++){
-    fout<<ar[i].date<<" "<<ar[i].type<<" "<<ar[i].account<<" "<<ar[i].amount<<" "<<ar[i].note<<endl;
+  for (int i = 0; i < rnum; i++){
+    fout << ar[i].date << " " << ar[i].type << " " << ar[i].account << " " << ar[i].amount << " " << ar[i].note << endl;
   }
   fout.close();
 }
 
 void User::load_user(User & user){
-  string filename="user_info.txt";
+  string filename = "user_info.txt";
   ifstream fin;
   fin.open(filename.c_str());
-  if(fin.fail()){
-    cout<< "Fail to get user information."<<endl;
+
+  if (fin.fail()){
+    cout << "Fail to get user information." << endl;
     exit(1);
   }
-    fin>>user.username;
-    fin>>user.password;
+
+    fin >> user.username;
+    fin >> user.password;
     fin.close();
 }
 
 void User::output_user(User & user){
-  string filename="user_info.txt";
+  string filename = "user_info.txt";
   ofstream fout;
   fout.open(filename.c_str());
+
   if(fout.fail()){
-    cout<<"Failed to output user information into "<<filename<<"."<<endl;
+    cout << "Failed to output user information into " << filename << "." << endl;
     exit(1);
   }
-  fout<<user.username<<endl;
-  fout<<user.password<<endl;
+
+  fout << user.username << endl;
+  fout << user.password << endl;
   fout.close();
 }
 
@@ -330,10 +334,10 @@ void edit_record(Record ar[], int rnum){
   cin >> ans;
   if (ans == 'Y'){
     cout << "Please enter the note:";
-    getline(cin,ar[x-1].note);
+    getline(cin, ar[x-1].note);
   }
 
-  cout << "Modify completed!"<< endl;
+  cout << "Modify completed!" << endl;
 }
 
 void delete_record(Record ar[], Account ac[], int &rnum){
@@ -394,6 +398,7 @@ void sort_record(Record ar[], int rnum){
   cout << "1.Date 2.Amount" << endl;
   cout << "Choose how to sort the records:";
   cin >> x;
+
   switch(x){
     case 1:
     Date min;
@@ -491,180 +496,182 @@ void search_record(Record ar[], int rnum){
 
 void monthly_statement(Record ar[], int rnum){
   string year,month;
-  cout<<"Please input the year and the month you want to search:"<<endl;
-  cin>>year>>month;
-  Record *nr= new Record[rnum];
-  int j=0;
-  for(int i=0;i<rnum;i++){
-    if(ar[i].date.year==year && ar[i].date.month==month){
-      nr[j]=ar[i];
+  cout << "Please input the year and the month you want to search:" << endl;
+  cin >> year >> month;
+  Record *nr = new Record [rnum];
+  int j = 0;
+  for (int i = 0; i < rnum; i++){
+    if (ar[i].date.year == year && ar[i].date.month == month){
+      nr[j] = ar[i];
       j++;
     }
   }
   //get all records of the exact month.
-  double total_expense=0, food_expense=0, fixed_expense=0, commodity_expense=0, entertainment_expense=0;
-  double total_income=0, earned_income=0, portfolio_income=0, passive_income=0, debt_expense=0;
-  for(int i=0;i<j;i++){
-    if(nr[i].type=="food_expense"){
-      food_expense+=nr[i].amount;
-      total_expense+=nr[i].amount;
+  double total_expense = 0, food_expense = 0, fixed_expense = 0, commodity_expense = 0, entertainment_expense = 0;
+  double total_income = 0, earned_income = 0, portfolio_income = 0, passive_income = 0, debt_expense = 0;
+  for (int i = 0; i < j; i++){
+    if (nr[i].type == "food_expense"){
+      food_expense += nr[i].amount;
+      total_expense += nr[i].amount;
     }
-    else if(nr[i].type=="fixed_expense"){
-      fixed_expense+=nr[i].amount;
-      total_expense+=nr[i].amount;
+    else if (nr[i].type == "fixed_expense"){
+      fixed_expense += nr[i].amount;
+      total_expense += nr[i].amount;
     }
-    else if(nr[i].type=="commodity_expense"){
-      commodity_expense+=nr[i].amount;
-      total_expense+=nr[i].amount;
+    else if (nr[i].type == "commodity_expense"){
+      commodity_expense += nr[i].amount;
+      total_expense += nr[i].amount;
     }
-    else if(nr[i].type=="entertainment_expense"){
-      entertainment_expense+=nr[i].amount;
-      total_expense+=nr[i].amount;
+    else if (nr[i].type == "entertainment_expense"){
+      entertainment_expense += nr[i].amount;
+      total_expense += nr[i].amount;
     }
-    else if(nr[i].type=="earned_income"){
-      earned_income+=nr[i].amount;
-      total_income+=nr[i].amount;
+    else if (nr[i].type == "earned_income"){
+      earned_income += nr[i].amount;
+      total_income += nr[i].amount;
     }
-    else if(nr[i].type=="portfolio_income"){
-      portfolio_income+=nr[i].amount;
-      total_income+=nr[i].amount;
+    else if (nr[i].type == "portfolio_income"){
+      portfolio_income += nr[i].amount;
+      total_income += nr[i].amount;
     }
-    else if(nr[i].type=="passive_income"){
-      passive_income+=nr[i].amount;
-      total_income+=nr[i].amount;
+    else if (nr[i].type == "passive_income"){
+      passive_income += nr[i].amount;
+      total_income += nr[i].amount;
     }
   }
-  for(int i=0;i<j;i++){
-    if(nr[i].account.name=="credit card"){
-      debt_expense+=nr[i].amount;
+  for (int i = 0; i < j; i++){
+    if (nr[i].account.name == "credit card"){
+      debt_expense += nr[i].amount;
     }
   }
   //calculate total amount of different types.
-  double food_ratio=food_expense/total_expense*100;
-  double fixed_ratio=fixed_expense/total_expense*100;
-  double commodity_ratio=commodity_expense/total_expense*100;
-  double entertainment_ratio=entertainment_expense/total_expense*100;
-  double earned_ratio=earned_income/total_income*100;
-  double portfolio_ratio=portfolio_income/total_income*100;
-  double passive_ratio=passive_income/total_income*100;
-  double expenses_ratio=total_expense/total_income*100;
-  double debt_ratio=debt_expense/total_expense*100;
+  double food_ratio = food_expense / total_expense * 100;
+  double fixed_ratio = fixed_expense / total_expense * 100;
+  double commodity_ratio = commodity_expense / total_expense * 100;
+  double entertainment_ratio = entertainment_expense / total_expense * 100;
+  double earned_ratio = earned_income / total_income * 100;
+  double portfolio_ratio = portfolio_income / total_income * 100;
+  double passive_ratio = passive_income / total_income * 100;
+  double expenses_ratio = total_expense / total_income * 100;
+  double debt_ratio = debt_expense / total_expense * 100;
   //calculate ratios.
-  string filename="statement_of_"+year+"_"+month+".txt";
+  string filename = "statement_of_" + year + "_" + month + ".txt";
   ofstream fout;
   fout.open(filename.c_str());
-  if(fout.fail()){
-    cout<<"Opening "<<filename<<".txt failed."<<endl;
+
+  if (fout.fail()){
+    cout << "Opening " << filename << ".txt failed." << endl;
     exit(1);
   }
-  fout<<fixed<<setprecision(2);
-  fout<<"******** Monthli Statement ********"<<endl;
-  fout<<"********** "<<year<<", "<<month<<" **********"<<endl;
-  fout<<"Income: "<<endl;
-  fout<<"  Earned income --------"<<earned_income<<"   "<<earned_ratio<<'%'<<endl;
-  fout<<"  Portfolio income --------"<<portfolio_income<<"   "<<portfolio_ratio<<'%'<<endl;
-  fout<<"  Passive Earned income --------"<<passive_income<<"   "<<passive_ratio<<'%'<<endl;
-  fout<<"Total income ----------------"<<total_income<<endl;
-  fout<<endl;
-  fout<<"Expenses: "<<endl;
-  fout<<"  Food expense --------"<<food_expense<<"   "<<food_ratio<<'%'<<endl;
-  fout<<"  Fixed expense --------"<<fixed_expense<<"   "<<fixed_ratio<<'%'<<endl;
-  fout<<"  Commodity expense --------"<<commodity_expense<<"   "<<commodity_ratio<<'%'<<endl;
-  fout<<"  Entertainment expense --------"<<entertainment_expense<<"   "<<entertainment_ratio<<'%'<<endl;
-  fout<<"Total expense ----------------"<<total_expense<<endl;
-  fout<<endl;
-  fout<<"  Expense on debt --------"<<debt_expense<<"   "<<debt_ratio<<'%'<<endl;
-  fout<<endl;
-  fout<<"  Expense over income --------"<<expenses_ratio<<'%'<<endl;
+
+  fout << fixed << setprecision(2);
+  fout << "******** Monthli Statement ********" << endl;
+  fout << "********** " << year << ", " << month << " **********" << endl;
+  fout << "Income: " << endl;
+  fout << "  Earned income --------" << earned_income << "   " << earned_ratio << '%' << endl;
+  fout << "  Portfolio income --------" << portfolio_income << "   " << portfolio_ratio << '%' << endl;
+  fout << "  Passive Earned income --------" << passive_income << "   " << passive_ratio << '%' << endl;
+  fout << "Total income ----------------" << total_income << endl;
+  fout << endl;
+  fout << "Expenses: " << endl;
+  fout << "  Food expense --------" << food_expense << "   " << food_ratio << '%' << endl;
+  fout << "  Fixed expense --------" << fixed_expense << "   " << fixed_ratio << '%' << endl;
+  fout << "  Commodity expense --------" << commodity_expense << "   " << commodity_ratio << '%' << endl;
+  fout << "  Entertainment expense --------" << entertainment_expense << "   " << entertainment_ratio << '%' << endl;
+  fout << "Total expense ----------------" << total_expense << endl;
+  fout << endl;
+  fout << "  Expense on debt --------" << debt_expense << "   " << debt_ratio << '%' << endl;
+  fout << endl;
+  fout << "  Expense over income --------" << expenses_ratio << '%' << endl;
   fout.close()
-  delete []nr;
+  delete [] nr;
   //print monthly statement into the file.
-  cout<<"Monthly statement has successfully stored in "<<filename<<"!"<<endl;
+  cout << "Monthly statement has successfully stored in " << filename << "!" << endl;
 }
 
 void financial_analysis(Record ar[], int rnum){
   string year,month;
-  cout<<"Please input the year and the month you want to search:"<<endl;
-  cin>>year>>month;
-  Record *nr= new Record[rnum];
-  int j=0;
-  for(int i=0;i<rnum;i++){
-    if(ar[i].date.year==year && ar[i].date.month==month){
-      nr[j]=ar[i];
+  cout << "Please input the year and the month you want to search:" << endl;
+  cin >> year >> month;
+  Record * nr = new Record [rnum];
+  int j = 0;
+  for (int i = 0; i < rnum; i++){
+    if (ar[i].date.year == year && ar[i].date.month == month){
+      nr[j] = ar[i];
       j++;
     }
   }
   //get all records of the exact month.
-  double total_expense=0, food_expense=0;
-  double total_income=0, earned_income=0, portfolio_income=0, passive_income=0, debt_expense=0;
-  for(int i=0;i<j;i++){
-    if(nr[i].type=="food_expense"){
-      food_expense+=nr[i].amount;
-      total_expense+=nr[i].amount;
+  double total_expense = 0, food_expense = 0;
+  double total_income = 0, earned_income = 0, portfolio_income = 0, passive_income = 0, debt_expense = 0;
+  for (int i = 0; i < j; i++){
+    if (nr[i].type == "food_expense"){
+      food_expense += nr[i].amount;
+      total_expense += nr[i].amount;
     }
-    else if(nr[i].type=="fixed_expense"){
-      total_expense+=nr[i].amount;
+    else if (nr[i].type == "fixed_expense"){
+      total_expense += nr[i].amount;
     }
-    else if(nr[i].type=="commodity_expense"){
-      total_expense+=nr[i].amount;
+    else if (nr[i].type == "commodity_expense"){
+      total_expense += nr[i].amount;
     }
-    else if(nr[i].type=="entertainment_expense"){
-      total_expense+=nr[i].amount;
+    else if (nr[i].type == "entertainment_expense"){
+      total_expense += nr[i].amount;
     }
     else {
-      total_income+=nr[i].amount;
+      total_income += nr[i].amount;
     }
   }
-  for(int i=0;i<j;i++){
-    if(nr[i].account.name=="credit card"){
-      debt_expense+=nr[i].amount;
+  for (int i = 0; i < j; i++){
+    if (nr[i].account.name == "credit card"){
+      debt_expense += nr[i].amount;
     }
   }
   //calculate total amount of different types.
-  double food_ratio=food_expense/total_expense*100;
-  double expenses_ratio=total_expense/total_income*100;
-  double debt_ratio=debt_expense/total_expense*100;
+  double food_ratio = food_expense / total_expense * 100;
+  double expenses_ratio = total_expense / total_income * 100;
+  double debt_ratio = debt_expense / total_expense * 100;
   //calculate ratios.
-  string filename="financial_analysis_"+year+"_"+month+".txt";
+  string filename = "financial_analysis_" + year + "_" + month + ".txt";
   ofstream fout;
   fout.open(filename.c_str());
-  if(fout.fail()){
-    cout<<"Opening "<<filename<<".txt failed."<<endl;
+  if (fout.fail()){
+    cout << "Opening " << filename << ".txt failed." << endl;
     exit(1);
   }
-  fout<<fixed<<setprecision(2);
-  fout<<"******** Monthli Statement ********"<<endl;
-  fout<<"********** "<<year<<", "<<month<<" **********"<<endl;
-  fout<<endl;
-  fout<<"Liability ratio = "<<debt_ratio<<'%'<<endl;
-  if(debt_ratio>25){
-    fout<<"Liability ratio is too high. You may face the risk of being deep in debt!"
+  fout << fixed << setprecision(2);
+  fout << "******** Monthli Statement ********" << endl;
+  fout << "********** " << year << ", " << month << " **********" << endl;
+  fout << endl;
+  fout << "Liability ratio = " << debt_ratio << '%' << endl;
+  if (debt_ratio > 25){
+    fout << "Liability ratio is too high. You may face the risk of being deep in debt!";
   }
   else{
-    fout<<"Liability ratio is normal. You may not face debt risk!"
+    fout << "Liability ratio is normal. You may not face debt risk!";
   }
-  fout<<endl;
-  fout<<"Engel Ratio = "<<food_ratio<<'%'<<endl;
-  if(food_ratio>30){
-    fout<<"Keep moving! You can be richer!"
-  }
-  else{
-    fout<<"Congratulations! You are living a wealthy life!"
-  }
-  fout<<endl;
-  fout<<"Expense ratio = "<<expenses_ratio<<'%'<<endl;
-  if(expenses_ratio>70){
-    fout<<"Spent too much! You need to save money!"
+  fout << endl;
+  fout << "Engel Ratio = " << food_ratio << '%' << endl;
+  if (food_ratio > 30){
+    fout << "Keep moving! You can be richer!";
   }
   else{
-    fout<<"Expense ratio is normal. Good Job!"
+    fout << "Congratulations! You are living a wealthy life!";
+  }
+  fout << endl;
+  fout << "Expense ratio = " << expenses_ratio << '%' << endl;
+  if (expenses_ratio > 70){
+    fout << "Spent too much! You need to save money!";
+  }
+  else{
+    fout << "Expense ratio is normal. Good Job!";
   }
   fout.close();
-  cout<<"Financial analysis has successfully stored in "<<filename<<"!"<<endl;
+  cout << "Financial analysis has successfully stored in " << filename << "!" << endl;
 }
 
 string selection_menu(){
-  //可能还有更多功能要加！！！
+  //function:print the selection menu and return user's choice.
 	int choice;
 
 	// print selection menu
@@ -693,10 +700,14 @@ int main(){
   User user;
   Account ac[3]={{"cash",0},{"bank card",0},{"credit card",0}};
 
+  //print the welcome screen.
   cout << "********************************" << endl;
   cout << "* Welcome to Accounting system *" << endl;
   cout << "********************************" << endl;
-  bool flag = user.user_login();//check user name and password
+  cout << "Please log in." << endl;
+  user.load_user();
+  //check user name and password
+  bool flag = user.user_login();
   if (flag){
     int num = 3;
     Record * ar = new Record [num];
@@ -746,7 +757,7 @@ int main(){
   choice = selection_menu();
     }
   output_record(str, ar, rnum);
-  User::output_user(user);
+  user.output_user(user);
   cout << "Goodbye!" << endl << endl;
   delete [] ar;
   }
