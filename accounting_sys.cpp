@@ -389,14 +389,105 @@ void add_record(Record ar[], Account ac[], int &rnum){
 }
 
 void sort_record(Record ar[], int rnum){
-//啥都没写！！
+  int i, j, idx;
+  int x;
+  cout << "1.Date 2.Amount" << endl;
+  cout << "Choose how to sort the records:";
+  cin >> x;
+  switch(x){
+    case 1:
+    Date min;
+    for (i = 0; i < rnum - 1; i++){
+      min = ar[i].date;
+      idx = i;
+      for (j = i + 1; j < rnum; j++){
+        if (ar[j].date.year < ar[i].date.year || (ar[j].date.year == ar[i].date.year && ar[j].date.month < ar[i].date.month) || (ar[j].date.year == ar[i].date.year && ar[j].date.month == ar[i].date.month && ar[j].date.day < ar[i].date.day)){
+          min = ar[j].date;
+          idx = j;
+        }
+      }
+      if (idx != i){
+        Record temp;
+        temp = ar[i];
+        ar[i] = ar[j];
+        ar[j] = temp;
+      }
+    }
+    break;
+
+    case 2:
+    double min;
+    for (i = 0; i < rnum - 1; i++){
+      min = ar[i].amount;
+      idx = i;
+      for (j = i + 1; j < rnum; j++){
+        if (ar[j].amount < min){
+          min = ar[j].amount;
+          idx = j;
+        }
+      }
+      if (idx != i){
+        Record temp;
+        temp = ar[i];
+        ar[i] = ar[j];
+        ar[j] = temp;
+      }
+    }
+    break;
+  }
 }
 
 void search_record(Record ar[], int rnum){
-//啥都没写！！
+  cout << "1.Date 2.Type 3.Account" << endl;
+  cout << "Choose which category you want to search by:";
+  int x, count = 0;
+  string ans;
+  cin >> x;
+  switch(x){
+    case 1:
+    cout << "Please enter the date(DD/MM/YYYY):";
+    cin >> ans;
+    for(int i = 0; i < rnum; i++){
+      string date = ar[i].date.showdate();
+      if (date.find(ans) != -1){
+        cout << setw(7) << "Number" << setw(12) << "Date" << setw(10) << "Type" << << setw(10) << "Account" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
+        cout << setw(7) << i+1 << setw(12) << ar[i].date.showdate() << setw(10) << ar[i].type << setw(10) << ar[i].account.name << setw(10) << amount << setw(20) << ar[i].note << endl;
+        count++;
+      }
+    }
+    break;
+
+    case 2:
+    cout << "Please enter the type:";
+    //print type list
+    cin >> ans;
+    for(int i = 0; i < rnum; i++){
+      string type = ar[i].type;
+      if (type.find(ans) != -1){
+        cout << setw(7) << "Number" << setw(12) << "Date" << setw(10) << "Type" << << setw(10) << "Account" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
+        cout << setw(7) << i+1 << setw(12) << ar[i].date.showdate() << setw(10) << ar[i].type << setw(10) << ar[i].account.name << setw(10) << amount << setw(20) << ar[i].note << endl;
+        count++;
+      }
+    }
+    break;
+
+    case 3:
+    cout << "Please enter the account:";
+    //print account list
+    cin >> ans;
+    for(int i = 0; i < rnum; i++){
+      string account = ar[i].account.name;
+      if (Account.find(ans) != -1){
+        cout << setw(7) << "Number" << setw(12) << "Date" << setw(10) << "Type" << << setw(10) << "Account" << setw(10) << "Amount"<< setw(20) << "Note" << endl;
+        cout << setw(7) << i+1 << setw(12) << ar[i].date.showdate() << setw(10) << ar[i].type << setw(10) << ar[i].account.name << setw(10) << amount << setw(20) << ar[i].note << endl;
+        count++;
+      }
+    }
+    break;
+  }
+
+  cout << count <<"record(s) found." << endl;
 }
-
-
 
 void monthly_statement(Record ar[], int rnum, string year, string month){
   Record *nr= new Record[rnum];
@@ -566,7 +657,6 @@ void financial_analysis(Record ar[], int rnum, string year, string month){
   cout<<"Financial analysis has successfully stored in "<<filename<<"!"<<endl;
 }
 
-
 string selection_menu(){
   //可能还有更多功能要加！！！
 	string choice;
@@ -590,6 +680,7 @@ string selection_menu(){
 
 	return choice;
 }
+
 
 int main(){
   User user;
