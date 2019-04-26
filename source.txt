@@ -1,0 +1,2 @@
+20 4 2019 food_expense credit_card -100 dinner
+15 4 2019 food_expense credit_card -200.5 supermarket
