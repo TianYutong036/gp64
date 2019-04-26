@@ -489,7 +489,10 @@ void search_record(Record ar[], int rnum){
   cout << count <<"record(s) found." << endl;
 }
 
-void monthly_statement(Record ar[], int rnum, string year, string month){
+void monthly_statement(Record ar[], int rnum){
+  string year,month;
+  cout<<"Please input the year and the month you want to search:"<<endl;
+  cin>>year>>month;
   Record *nr= new Record[rnum];
   int j=0;
   for(int i=0;i<rnum;i++){
@@ -579,7 +582,10 @@ void monthly_statement(Record ar[], int rnum, string year, string month){
   cout<<"Monthly statement has successfully stored in "<<filename<<"!"<<endl;
 }
 
-void financial_analysis(Record ar[], int rnum, string year, string month){
+void financial_analysis(Record ar[], int rnum){
+  string year,month;
+  cout<<"Please input the year and the month you want to search:"<<endl;
+  cin>>year>>month;
   Record *nr= new Record[rnum];
   int j=0;
   for(int i=0;i<rnum;i++){
@@ -659,18 +665,19 @@ void financial_analysis(Record ar[], int rnum, string year, string month){
 
 string selection_menu(){
   //可能还有更多功能要加！！！
-	string choice;
+	int choice;
 
 	// print selection menu
-  cout << "1. Add a new record." << endl;
-  cout << "2. Print all records." << endl;
+  cout << "1. Print all records." << endl;
+  cout << "2. Add a new record." << endl;
   cout << "3. Edit the record." << endl;
-  cout << "4. Search the records by partial match of the name." << endl;
-  cout << "5. Show monthly statement." << endl;
-  cout << "6. Show financial analysis of the month." << endl;
-  cout << "7. Set budget." << endl;
-  cout << "8. Sort the records by date or amount." <<endl;
-  cout << "9. Change login password." << endl;
+  cout << "4. Delete the record."<<endl;
+  cout << "5. Set budget." << endl;
+  cout << "6. Search the records by partial match of the name." << endl;
+  cout << "7. Sort the records by date or amount." <<endl;
+  cout << "8. Change login password." << endl;
+  cout << "9. Show monthly statement." << endl;
+  cout << "10. Show financial analysis of the month." << endl;
   cout << "0. Quit. " << endl;
   cout << "Please enter your choice: ";
 
@@ -700,44 +707,46 @@ int main(){
     string choice = selection_menu();
     while (choice != "0"){
       switch (choice){
-        case "1":
+        case 1:
+          show_record(ar, rnum);
+          break;
+        case 2:
           if (rnum >= num){
             grow_record(ar, num);
           }
-          add_record(ar, rnum);
+          add_record(ar, ac, rnum);
           break;
-        case "2":
-          show_record(ar, rnum);
-          break;
-        case "3":
+        case 3:
           edit_record(ar, rnum);
           break;
-        case "4":
-          search_record(ar, rnum);
+        case 4:
+          delete_record(ar, ac, rnum);
           break;
-        case "5":
-          monthly_statement(ar,rnum);
-          break;
-        case "6":
-          financial_analysis(ar, rnum);
-          break;
-        case "7":
+        case 5:
           user.set_budget();
           break;
-        case "8":
+        case 6:
+          search_record(ar, rnum);
+          break;
+        case 7:
           sort_record(ar, rnum);
           break;
-        case "9":
+        case 8:
           user.set_password();
           break;
-        case "10":
-          add_account(ac,anum);
+        case 9:
+          monthly_statement(ar,rnum);
+          break;
+        case 10:
+          financial_analysis(ar, rnum);
           break;
         default:
           cout << "Invalid input!" << endl;
         }
   choice = selection_menu();
     }
+  output_record(str, ar, rnum);
+  User::output_user(user);
   cout << "Goodbye!" << endl << endl;
   delete [] ar;
   }
