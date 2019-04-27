@@ -13,14 +13,6 @@
 using namespace std;
 
 
-string Date :: showdate(){
-  //function : print the date in the format of "DD/MM/YYYY".
-  //input : None.
-  //output : None.
-  string r = day +'/' + month + '/' + year;
-  return r;
-}
-
 
 
 void check_month(Record ar[], int rnum, User & user){
