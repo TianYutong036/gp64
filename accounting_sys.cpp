@@ -542,7 +542,8 @@ void sort_record(Record ar[], int rnum){
 
 void search_record(Record ar[], int rnum){
   //function : search certain records by date, type or account.
-  //input : the array of records ar[],
+  //input : the array of records ar[], the number of records rnum.
+  //output : None.
   cout << "1.Date 2.Type 3.Account" << endl;
   cout << "Choose which category you want to search by:";
   int x, count = 0;
@@ -550,6 +551,7 @@ void search_record(Record ar[], int rnum){
   cin >> x;
   switch(x){
     case 1:
+    //search by date.
     cout << "Please enter the date(DD/MM/YYYY):";
     cin >> ans;
     for(int i = 0; i < rnum; i++){
@@ -563,6 +565,7 @@ void search_record(Record ar[], int rnum){
     break;
 
     case 2:
+    //search by type.
     int i;
     cout<<"\n1.expense 2.income"<<endl;
     cout << "Please enter the type:";
@@ -621,9 +624,9 @@ void search_record(Record ar[], int rnum){
     break;
 
     case 3:
+    //search by account.
     cout << "Please enter the account:";
     //to choose a certain account from the given list.
-
     cout<<"\n1.Cash 2.Bank Card 3.Credit Card"<<endl;
     cout << "Please enter the account:";
   	cin >> i;
@@ -648,11 +651,14 @@ void search_record(Record ar[], int rnum){
     }
     break;
   }
-
+  //print ht number of records satisfied.
   cout << count <<"record(s) found." << endl << endl;
 }
 
 void monthly_statement(Record ar[], int rnum){
+  //function : output a monthly statement of certain month to the file.
+  //input : the array of records ar[], the number of records rnum.
+  //output : None.
   string year,month;
   cout << "Please input the year and the month you want to search:" << endl;
   cin >> year >> month;
@@ -770,6 +776,9 @@ void monthly_statement(Record ar[], int rnum){
 }
 
 void financial_analysis(Record ar[], int rnum){
+  //function : output a fanancial analysis of certain month to the file.
+  //input : the array of records ar[], the number of records rnum.
+  //output : None.
   string year,month;
   cout << "Please input the year and the month you want to search:" << endl;
   cin >> year >> month;
@@ -872,6 +881,8 @@ void financial_analysis(Record ar[], int rnum){
 
 int selection_menu(){
   //function:print the selection menu and return user's choice.
+  //input : None.
+  //output : choice for the selection menu.
 	int choice;
 
 	// print selection menu
