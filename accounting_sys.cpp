@@ -7,6 +7,12 @@
 
 using namespace std;
 
+struct Budget{
+    double amount;
+    bool check=0;
+    double expenses;
+}
+
 class User{
   //difine a User class storing user's username,password and monthly budget.
 public:
@@ -17,7 +23,7 @@ public:
   void output_user();
   string username;
   string password;
-  int budget;
+  Budget budget;
 };
 
 struct Account{
@@ -65,6 +71,9 @@ void User::load_user(){
 
     fin >> username;
     fin >> password;
+    fin >> budget.amount;
+    fin >> budget.check;
+    fin >> budget.expenses;
     fin.close();
 }
 
@@ -100,14 +109,23 @@ bool User :: user_login(){
 
 void User :: set_budget(){
   //function: to set a monthly budget.
-  int x;
-  string month;
+  double x;
   cout << "Please enter the budget:";
   cin >> x;
-  budget = x;
-  cout << "Please enter the month:";
-  cin >> month;
+  budget.amount = x;
+  budget.check = 1;
+  budget.expenses = 0;
   cout << "Budget set up."<< endl << endl;
+}
+
+void User :: check_budget(){
+    if(budget.expenses >= budget.amount){
+        cout<<"Attention! You have already spend "<<budget.expenses<<" which is over your budget."<<endl;
+        cout<<"Your budget set is eliminated."<<endl;
+        budget.amount=0;
+        budget.check=0;
+        budget.expenses=0;
+    }
 }
 
 void User :: set_password(){
@@ -149,6 +167,9 @@ void User::output_user(){
 
   fout << username << endl;
   fout << password << endl;
+  fout << budget.amount << endl;
+  fout << budget.check << endl;
+  fout << budget.expenses << endl;
   fout.close();
 }
 
@@ -309,7 +330,7 @@ void show_record(Record ar[], int rnum){
   }
 }
 
-void edit_record(Record ar[], int rnum){
+void edit_record(Record ar[], int rnum , User user){
   //function:edit one record in the file.
   int x;
   char ans;
@@ -317,8 +338,14 @@ void edit_record(Record ar[], int rnum){
   show_record(ar, rnum);
   cout << "Please choose the record to edit:";
   cin >> x;
-
+    
   int sign = ar[x-1].amount / abs(ar[x-1].amount);
+    
+  if(user.budget.check){
+    if(sign==-1){
+        user.budget.expenses+=ar[x-1].amount;
+    }
+  }
 
   cout << "Change the date(Y/N)?";
   cin >> ans;
@@ -348,8 +375,15 @@ void edit_record(Record ar[], int rnum){
     cout << "Please enter the note:";
     cin >> ar[x-1].note;
   }
-
+ 
   cout << "Modify completed!" << endl << endl;
+  
+  if(user.budget.check==1){
+    if(sign==-1){
+        user.budget.expenses-=ar[x-1].amount;
+        user.check_budget();
+    }
+  }
 }
 
 void delete_record(Record *&ar, Account ac[], int &rnum){
@@ -377,7 +411,7 @@ void delete_record(Record *&ar, Account ac[], int &rnum){
   cout << "Record " << x << " deleted." << endl << endl;
 }
 
-void add_record(Record ar[], Account ac[], int &rnum){
+void add_record(Record ar[], Account ac[], int &rnum , User user){
   //function: add new record to the account.
 	string str;
 	getline(cin, str); // flush the keyboard buffer
@@ -392,7 +426,7 @@ void add_record(Record ar[], Account ac[], int &rnum){
   cin >> d;
   ar[rnum].amount = d * sign;
   ar[rnum].account.balance += ar[rnum].amount;
-
+  
   cout << "Please enter the note: ";
   cin>> ar[rnum].note;
 
@@ -404,6 +438,13 @@ void add_record(Record ar[], Account ac[], int &rnum){
   cout << "Note:" << ar[rnum].note << endl;
   cout << "1 record added." << endl << endl;
 	rnum++;
+  
+  if(user.budget.check==1){
+    if(sign==-1){
+        user.budget.expenses-=ar[rnum].amount;
+        user.check_budget();
+    }
+  }
 }
 
 void sort_record(Record ar[], int rnum){
@@ -618,16 +659,8 @@ void monthly_statement(Record ar[], int rnum){
     }
   }
   //calculate total amount of different types.
-  double food_ratio = food_expense / total_expense * 100;
-  double fixed_ratio = fixed_expense / total_expense * 100;
-  double commodity_ratio = commodity_expense / total_expense * 100;
-  double entertainment_ratio = entertainment_expense / total_expense * 100;
-  double earned_ratio = earned_income / total_income * 100;
-  double portfolio_ratio = portfolio_income / total_income * 100;
-  double passive_ratio = passive_income / total_income * 100;
-  double expenses_ratio = total_expense / total_income * 100;
-  double debt_ratio = debt_expense / total_expense * 100;
-  //calculate ratios.
+  
+    
   string filename = "statement_of_" + year + "_" + month + ".txt";
   ofstream fout;
   fout.open(filename.c_str());
@@ -640,22 +673,50 @@ void monthly_statement(Record ar[], int rnum){
   fout << fixed << setprecision(2);
   fout << "******** Monthli Statement ********" << endl;
   fout << "********** " << year << ", " << month << " **********" << endl;
+    
   fout << "Income: " << endl;
-  fout << "  Earned income --------" << earned_income << "   " << earned_ratio << '%' << endl;
-  fout << "  Portfolio income --------" << portfolio_income << "   " << portfolio_ratio << '%' << endl;
-  fout << "  Passive Earned income --------" << passive_income << "   " << passive_ratio << '%' << endl;
+    
+  if(total_income!=0){
+    double earned_ratio = earned_income / total_income * 100;
+    double portfolio_ratio = portfolio_income / total_income * 100;
+    double passive_ratio = passive_income / total_income * 100;
+    double expenses_ratio = total_expense / total_income * 100;
+      
+    fout << "  Earned income --------" << earned_income << "   " << earned_ratio << '%' << endl;
+    fout << "  Portfolio income --------" << portfolio_income << "   " << portfolio_ratio << '%' << endl;
+    fout << "  Passive Earned income --------" << passive_income << "   " << passive_ratio << '%' << endl;
+  }
+  
   fout << "Total income ----------------" << total_income << endl;
   fout << endl;
+    
   fout << "Expenses: " << endl;
-  fout << "  Food expense --------" << food_expense << "   " << food_ratio << '%' << endl;
-  fout << "  Fixed expense --------" << fixed_expense << "   " << fixed_ratio << '%' << endl;
-  fout << "  Commodity expense --------" << commodity_expense << "   " << commodity_ratio << '%' << endl;
-  fout << "  Entertainment expense --------" << entertainment_expense << "   " << entertainment_ratio << '%' << endl;
+
+  if(total_expense!=0){
+        double food_ratio = food_expense / total_expense * 100;
+        double fixed_ratio = fixed_expense / total_expense * 100;
+        double commodity_ratio = commodity_expense / total_expense * 100;
+        double entertainment_ratio = entertainment_expense / total_expense * 100;
+        double debt_ratio = debt_expense / total_expense * 100;
+      
+      fout << "  Food expense --------" << food_expense << "   " << food_ratio << '%' << endl;
+      fout << "  Fixed expense --------" << fixed_expense << "   " << fixed_ratio << '%' << endl;
+      fout << "  Commodity expense --------" << commodity_expense << "   " << commodity_ratio << '%' << endl;
+      fout << "  Entertainment expense --------" << entertainment_expense << "   " << entertainment_ratio << '%' << endl;
+    }
+  
   fout << "Total expense ----------------" << total_expense << endl;
   fout << endl;
+    
+    if(total_expense!=0){
   fout << "  Expense on debt --------" << debt_expense << "   " << debt_ratio << '%' << endl;
   fout << endl;
+    }
+    
+    if(total_income!=0){
   fout << "  Expense over income --------" << expenses_ratio << '%' << endl;
+    }
+    
   fout.close();
   delete [] nr;
   //print monthly statement into the file.
@@ -700,18 +761,31 @@ void financial_analysis(Record ar[], int rnum){
       debt_expense += nr[i].amount;
     }
   }
-  //calculate total amount of different types.
-  double food_ratio = food_expense / total_expense * 100;
-  double expenses_ratio = total_expense / total_income * 100;
-  double debt_ratio = debt_expense / total_expense * 100;
-  //calculate ratios.
+
+
   string filename = "financial_analysis_" + year + "_" + month + ".txt";
   ofstream fout;
   fout.open(filename.c_str());
-  if (fout.fail()){
-    cout << "Opening " << filename << ".txt failed." << endl;
-    exit(1);
-  }
+    if (fout.fail()){
+        cout << "Opening " << filename << ".txt failed." << endl;
+        exit(1);
+    }
+    
+    if(total_expense==0 ){
+        fout<<"Total expense = 0. Unable to analyse."<<endl;
+    }
+    else if(total_income==0){
+        fout<<"Total income = 0. Unable to analyse."
+    }
+    else{
+  //calculate total amount of different types.
+    
+  double food_ratio = food_expense / total_expense * 100;
+  double debt_ratio = debt_expense / total_expense * 100;
+  double expenses_ratio = total_expense / total_income * 100;
+
+  //calculate ratios.
+  
   fout << fixed << setprecision(2);
   fout << "******** Monthli Statement ********" << endl;
   fout << "********** " << year << ", " << month << " **********" << endl;
@@ -739,6 +813,7 @@ void financial_analysis(Record ar[], int rnum){
   else{
     fout << "Expense ratio is normal. Good Job!";
   }
+    }
   fout.close();
   cout << "Financial analysis has successfully stored in " << filename << "!" << endl;
 }
@@ -772,7 +847,8 @@ int selection_menu(){
 int main(){
   User user;
   Account ac[3]={{"cash",0},{"bank_card",0},{"credit_card",0}};
-
+  bool if_budget;
+    
   //print the welcome screen.
   cout << "********************************" << endl;
   cout << "* Welcome to Accounting system *" << endl;
