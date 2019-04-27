@@ -13,8 +13,6 @@
 using namespace std;
 
 
-
-
 void check_month(Record ar[], int rnum, User & user){
   //function : calculate the monthly expenses already in the records in current month.
   //input : an array of records ar[], the number of records in the array rnum, the user information user.
@@ -576,7 +574,7 @@ void monthly_statement(Record ar[], int rnum){
 
   fout << fixed << setprecision(2);
   fout << "******** Monthly Statement ********" << endl;
-  fout << "********** " << year << ", " << month << " **********" << endl;
+  fout << "************* " << year << ", " << month << " *************" << endl;
 
   fout << "Income: " << endl;
 
@@ -585,12 +583,15 @@ void monthly_statement(Record ar[], int rnum){
     double portfolio_ratio = portfolio_income / total_income * 100;
     double passive_ratio = passive_income / total_income * 100;
 
-    fout << "  Earned income --------" << earned_income << "   " << earned_ratio << '%' << endl;
-    fout << "  Portfolio income --------" << portfolio_income << "   " << portfolio_ratio << '%' << endl;
-    fout << "  Passive Earned income --------" << passive_income << "   " << passive_ratio << '%' << endl;
+
+    fout << left;
+    fout << setfill('-');
+    fout << setw(20) <<"  Earned income " << earned_income << "   " << earned_ratio << '%' << endl;
+    fout << setw(20) <<"  Portfolio income " << portfolio_income << "   " << portfolio_ratio << '%' << endl;
+    fout << setw(20) <<"  Passive Earned income " << passive_income << "   " << passive_ratio << '%' << endl;
   }
 
-  fout << "Total income ----------------" << total_income << endl;
+  fout << setw(20) <<"  Total income " << total_income << endl;
   fout << endl;
 
   fout << "Expenses: " << endl;
@@ -601,24 +602,26 @@ void monthly_statement(Record ar[], int rnum){
       double commodity_ratio = commodity_expense / total_expense * 100;
       double entertainment_ratio = entertainment_expense / total_expense * 100;
 
-      fout << "  Food expense --------" << food_expense << "   " << food_ratio << '%' << endl;
-      fout << "  Fixed expense --------" << fixed_expense << "   " << fixed_ratio << '%' << endl;
-      fout << "  Commodity expense --------" << commodity_expense << "   " << commodity_ratio << '%' << endl;
-      fout << "  Entertainment expense --------" << entertainment_expense << "   " << entertainment_ratio << '%' << endl;
+      fout << left;
+      fout << setfill('-');
+      fout << setw(20) <<"  Food expense " << food_expense << "   " << food_ratio << '%' << endl;
+      fout << setw(20) <<"  Fixed expense " << fixed_expense << "   " << fixed_ratio << '%' << endl;
+      fout << setw(20) <<"  Commodity expense " << commodity_expense << "   " << commodity_ratio << '%' << endl;
+      fout << setw(20) <<"  Entertainment expense " << entertainment_expense << "   " << entertainment_ratio << '%' << endl;
     }
 
-  fout << "Total expense ----------------" << total_expense << endl;
+  fout << setw(20) <<"  Total expense " << total_expense << endl;
   fout << endl;
 
   if(total_expense!=0){
     double debt_ratio = debt_expense / total_expense * 100;
-    fout << "  Expense on debt --------" << debt_expense << "   " << debt_ratio << '%' << endl;
+    fout << setw(20) <<"  Expense on debt " << debt_expense << "   " << debt_ratio << '%' << endl;
     fout << endl;
   }
 
   if(total_income!=0){
     double expenses_ratio = total_expense / total_income * 100;
-    fout << "  Expense over income --------" << expenses_ratio << '%' << endl;
+    fout << setw(20) <<"  Expense over income " << expenses_ratio << '%' << endl;
   }
 
   fout.close();
@@ -701,7 +704,7 @@ void financial_analysis(Record ar[], int rnum){
 
   fout << fixed << setprecision(2);
   fout << "******** Financial Analysis ********" << endl;
-  fout << "********** " << year << ", " << month << " **********" << endl;
+  fout << "************* " << year << " , " << month << " *************" << endl;
   fout << endl;
   fout << "Liability ratio = " << debt_ratio << '%' << endl;
   if (debt_ratio > 25){
