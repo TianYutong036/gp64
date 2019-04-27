@@ -8,7 +8,7 @@
 - the system will provide statistical report of users’ financial state (e.g. monthly income and expenses, percentage of food expenses, etc.);
 - the accounting system allows budget setting. When expenses reach the budget, there will be an alert from the system.
 - the system could analyze users’ financial situation by calculating certain ratios to evaluate and give advice accordingly.
-- the system allows different users keep their accounts by requesting users to enter passwords to log in their own account.
+- the system allows different users keep their accounts by requesting users to enter passwords to log in their own account. After logging in, user can input certain filename to import records. (the default one is named "source.txt".)
 ## problem setting
 **The system includes two main files:**
 - A file records personal financial information(balance);
@@ -29,6 +29,8 @@ Print all records.
 add_record
 ```
 Add one record of income / expense to the system.
+(Notice: the format of date should be like: 5/4/2019)
+(Notice: the input date should be in order as assumption.)
 
 ```
 edit_record
@@ -44,6 +46,7 @@ Allow users to delete selected records from the system.
 set_budget
 ```
 Allow users to set monthly budget. When expenses reach the budget, there will be an alert from the system.
+(Notice: once the budget is set, the month is set as the latest record's month. If the expenses have reached the budget or the month has changed, users should reset budget.)
 
 ```
 search_record
