@@ -1,0 +1,18 @@
+******** Monthly Statement ********
+************* 2019, 4 *************
+Income: 
+  Earned income ----5000.00   67.57%
+  Portfolio income -2000.00   27.03%
+  Passive Earned income 400.00   5.41%
+  Total income -----7400.00
+
+Expenses: 
+  Food expense -----1200.00   13.71%
+  Fixed expense ----200.00   2.29%
+  Commodity expense 2350.00   26.86%
+  Entertainment expense 5000.00   57.14%
+  Total expense ----8750.00
+
+  Expense on debt --1550.00   17.71%
+
+  Expense over income 118.24%
