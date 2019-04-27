@@ -4,14 +4,12 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include "budget.h"
+#include "account.h"
+#include "record.h"
+#include "date.h"
 
 using namespace std;
-
-struct Budget{
-    double amount;
-    bool check=0;
-    double expenses;
-};
 
 class User{
   //difine a User class storing user's username,password and budget.
@@ -27,24 +25,7 @@ public:
   Budget budget;
 };
 
-struct Account{
-  string name;
-  double balance;
-};
 
-class Date{
-public:
-  string year, month, day;
-  string showdate();
-};
-
-struct Record{
-  string note;
-  Date date;
-  Account account;
-  double amount;
-  string type;
-};
 
 string dtos(double n){
   //fuction: convert a double number into string format.
@@ -58,6 +39,12 @@ string itos(int n){
   ostringstream stream;
   stream << n;
   return stream.str();
+}
+
+string Date :: showdate(){
+  //function: print the date in the format of "DD/MM/YYYY".
+  string r = day +'/' + month + '/' + year;
+  return r;
 }
 
 void User::load_user(){
@@ -184,12 +171,6 @@ void User::output_user(){
   fout << budget.check << endl;
   fout << budget.expenses << endl;
   fout.close();
-}
-
-string Date :: showdate(){
-  //function: print the date in the format of "DD/MM/YYYY".
-  string r = day +'/' + month + '/' + year;
-  return r;
 }
 
 void motify_date(Record ar[],int pos){
