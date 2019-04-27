@@ -8,6 +8,7 @@
 using namespace std;
 
 class User{
+  //difine a User class storing user's username,password and monthly budget.
 public:
   bool user_login();
   void set_password();
@@ -129,7 +130,7 @@ void User :: set_password(){
       cin >>pwcheck;
     }
 
-      cout << "Password motified successfully."<< endl;
+      cout << "Password motified successfully."<< endl << endl;
       password = pw;
 }
 
@@ -224,13 +225,13 @@ void choose_account(Record ar[], Account ac[], int pos){
 	cin >> i;
   switch(i){
     case 1:
-      ar[pos].account=ac[0];
+      ar[pos].account = ac[0];
       break;
     case 2:
-      ar[pos].account=ac[1];
+      ar[pos].account = ac[1];
       break;
     case 3:
-      ar[pos].account=ac[2];
+      ar[pos].account = ac[2];
       break;
   }
 }
@@ -345,7 +346,7 @@ void edit_record(Record ar[], int rnum){
     cin >> ar[x-1].note;
   }
 
-  cout << "Modify completed!" << endl;
+  cout << "Modify completed!" << endl << endl;
 }
 
 void delete_record(Record *&ar, Account ac[], int &rnum){
@@ -473,9 +474,54 @@ void search_record(Record ar[], int rnum){
     break;
 
     case 2:
+    int i;
+    cout<<"\n1.expense 2.income"<<endl;
     cout << "Please enter the type:";
-    //print type list
-    cin >> ans;
+  	cin >> i;
+    //to choose a center type from the given list.
+    if (i == 1){
+      sign = -1;
+      cout << endl;
+      cout << "1. food expense" << endl;
+      cout << "2. fixed expense" << endl;
+      cout << "3. commodity expense" << endl;
+      cout << "4. entertainment expense" << endl;
+      cout << "Please enter the type of expense:";
+      cin >> i;
+      switch(i){
+        case 1:
+          ans = "food_expense";
+          break;
+        case 2:
+          ans = "fixed_expense";
+          break;
+        case 3:
+          ans = "commodity_expense";
+          break;
+        case 4:
+          ans = "entertainment_expense";
+          break;
+      }
+    }
+    else{
+      cout << "1. earned income" << endl;
+      cout << "2. portfolio income" << endl;
+      cout << "3. passive income" << endl;
+      cout << "Please enter the type of expense:";
+      cin >> i;
+      switch(i){
+        case 1:
+          ans = "earned_income";
+          break;
+        case 2:
+          ans = "portfolio_income";
+          break;
+        case 3:
+          ans = "passive_income";
+          break;
+      }
+    }
+
     for(int i = 0; i < rnum; i++){
       string type = ar[i].type;
       if (type.find(ans) != -1){
@@ -488,8 +534,22 @@ void search_record(Record ar[], int rnum){
 
     case 3:
     cout << "Please enter the account:";
-    //print account list
-    cin >> ans;
+    //to choose a certain account from the given list.
+    int i;
+    cout<<"\n1.Cash 2.Bank Card 3.Credit Card"<<endl;
+    cout << "Please enter the account:";
+  	cin >> i;
+    switch(i){
+      case 1:
+        ans = ac[0];
+        break;
+      case 2:
+        ans = ac[1];
+        break;
+      case 3:
+        ans = ac[2];
+        break;
+    }
     for(int i = 0; i < rnum; i++){
       string account = ar[i].account.name;
       if (account.find(ans) != -1){
@@ -501,14 +561,14 @@ void search_record(Record ar[], int rnum){
     break;
   }
 
-  cout << count <<"record(s) found." << endl;
+  cout << count <<"record(s) found." << endl << endl;
 }
 
 void monthly_statement(Record ar[], int rnum){
   string year,month;
   cout << "Please input the year and the month you want to search:" << endl;
   cin >> year >> month;
-  Record *nr = new Record [rnum];
+  Record *  nr = new Record [rnum];
   int j = 0;
   for (int i = 0; i < rnum; i++){
     if (ar[i].date.year == year && ar[i].date.month == month){
