@@ -874,10 +874,10 @@ int main(){
           if (rnum >= num){
             grow_record(ar, num);
           }
-          add_record(ar, ac, rnum);
+          add_record(ar, ac, rnum, user);
           break;
         case 3:
-          edit_record(ar, rnum);
+          edit_record(ar, rnum, user);
           break;
         case 4:
           delete_record(ar, ac, rnum);
