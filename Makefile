@@ -3,4 +3,4 @@ accounting.o:accounting_sys.cpp account.h budget.h date.h record.h
 date.o:date.cpp date.h
 	g++ -c date.cpp
 accounting:accounting_sys.o date.o
-	g++ accounting.o date.o -o accounting
+	g++ accounting_sys.o date.o -o accounting
