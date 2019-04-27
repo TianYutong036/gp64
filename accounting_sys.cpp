@@ -699,7 +699,9 @@ void monthly_statement(Record ar[], int rnum){
   }
   for (int i = 0; i < j; i++){
     if (nr[i].account.name == "credit_card"){
+      if(nr[i].amount<0){
       debt_expense -= nr[i].amount;
+      }
     }
   }
   //calculate total amount of different types.
@@ -786,25 +788,27 @@ void financial_analysis(Record ar[], int rnum){
   double total_income = 0, earned_income = 0, portfolio_income = 0, passive_income = 0, debt_expense = 0;
   for (int i = 0; i < j; i++){
     if (nr[i].type == "food_expense"){
-      food_expense += nr[i].amount;
-      total_expense += nr[i].amount;
+      food_expense -= nr[i].amount;
+      total_expense -= nr[i].amount;
     }
     else if (nr[i].type == "fixed_expense"){
-      total_expense += nr[i].amount;
+      total_expense -= nr[i].amount;
     }
     else if (nr[i].type == "commodity_expense"){
-      total_expense += nr[i].amount;
+      total_expense -= nr[i].amount;
     }
     else if (nr[i].type == "entertainment_expense"){
-      total_expense += nr[i].amount;
+      total_expense -= nr[i].amount;
     }
     else {
       total_income += nr[i].amount;
     }
   }
   for (int i = 0; i < j; i++){
-    if (nr[i].account.name == "credit card"){
-      debt_expense += nr[i].amount;
+    if (nr[i].account.name == "credit_card"){
+      if(nr[i].amount<0){
+      debt_expense -= nr[i].amount;
+      }
     }
   }
 
@@ -835,31 +839,31 @@ void financial_analysis(Record ar[], int rnum){
   //calculate ratios.
 
   fout << fixed << setprecision(2);
-  fout << "******** Monthly Statement ********" << endl;
+  fout << "******** Financial Analysis ********" << endl;
   fout << "********** " << year << ", " << month << " **********" << endl;
   fout << endl;
   fout << "Liability ratio = " << debt_ratio << '%' << endl;
   if (debt_ratio > 25){
-    fout << "Liability ratio is too high. You may face the risk of being deep in debt!";
+    fout << "Liability ratio is too high. You may face the risk of being deep in debt!"<<endl;
   }
   else{
-    fout << "Liability ratio is normal. You may not face debt risk!";
+    fout << "Liability ratio is normal. You may not face debt risk!"<<endl;
   }
   fout << endl;
   fout << "Engel Ratio = " << food_ratio << '%' << endl;
   if (food_ratio > 30){
-    fout << "Keep moving! You can be richer!";
+    fout << "Keep moving! You can be richer!"<<endl;
   }
   else{
-    fout << "Congratulations! You are living a wealthy life!";
+    fout << "Congratulations! You are living a wealthy life!"<<endl;
   }
   fout << endl;
   fout << "Expense ratio = " << expenses_ratio << '%' << endl;
   if (expenses_ratio > 70){
-    fout << "Spent too much! You need to save money!";
+    fout << "Spent too much! You need to save money!"<<endl;
   }
   else{
-    fout << "Expense ratio is normal. Good Job!";
+    fout << "Expense ratio is normal. Good Job!"<<endl;
   }
     }
   fout.close();
