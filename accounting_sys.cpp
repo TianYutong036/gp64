@@ -100,9 +100,12 @@ bool User :: user_login(){
 void User :: set_budget(){
   //function: to set a monthly budget.
   int x;
+  string month;
   cout << "Please enter the budget:";
   cin >> x;
   budget = x;
+  cout << "Please enter the month:";
+  cin >> month;
   cout << "Budget set up."<< endl << endl;
 }
 
