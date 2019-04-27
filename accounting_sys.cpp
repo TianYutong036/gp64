@@ -129,12 +129,14 @@ void User :: check_budget(){
   }
 }
 
-void check_month(Record ar[], int rnum, User user){
+void check_month(Record ar[], int rnum, User & user){
   string month=ar[rnum-1].date.month;
   string year=ar[rnum-1].date.year;
   for(int i=0;i<rnum;i++){
     if(ar[i].date.year==year && ar[i].date.month==month){
+      if(ar[i].amount<0){
       user.budget.expenses-=ar[i].amount;
+      }
     }
   }
 }
@@ -385,7 +387,7 @@ void edit_record(Record ar[], int rnum , User user){
 
   cout << "Modify completed!" << endl << endl;
 
-  if(user.budget.check==1){
+  if(user.budget.check){
     if(sign==-1){
       if(ar[x-1].date.year==ar[rnum-1].date.year && ar[x-1].date.month==ar[rnum-1].date.month){
         user.budget.expenses+=origin_amount;
@@ -421,7 +423,7 @@ void delete_record(Record *&ar, Account ac[], int &rnum){
   cout << "Record " << x << " deleted." << endl << endl;
 }
 
-void add_record(Record ar[], Account ac[], int &rnum , User user){
+void add_record(Record ar[], Account ac[], int &rnum , User & user){
   //function: add new record to the account.
 	string str;
 	getline(cin, str); // flush the keyboard buffer
@@ -451,7 +453,7 @@ void add_record(Record ar[], Account ac[], int &rnum , User user){
   if(user.budget.check==1){
     if(sign==-1){
       if(ar[rnum].date.year==ar[rnum-1].date.year && ar[rnum].date.month==ar[rnum-1].date.month){
-        user.budget.expenses-=ar[rnum].amount;
+        user.budget.expenses -= ar[rnum].amount;
         user.check_budget();
       }
     }
