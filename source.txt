@@ -7,4 +7,4 @@
 28 4 2019 entertainment_expense cash -5000 travel
 28 4 2019 passive_income credit_card 400 rent
 29 4 2019 food_expense credit_card -200 lunch
-29 4 2019 commodity_expense bank_card -200 0
+29 4 2019 commodity_expense bank_card -200 octopus
