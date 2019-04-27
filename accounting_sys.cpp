@@ -621,20 +621,20 @@ void monthly_statement(Record ar[], int rnum){
   double total_income = 0, earned_income = 0, portfolio_income = 0, passive_income = 0, debt_expense = 0;
   for (int i = 0; i < j; i++){
     if (nr[i].type == "food_expense"){
-      food_expense += nr[i].amount;
-      total_expense += nr[i].amount;
+      food_expense -= nr[i].amount;
+      total_expense -= nr[i].amount;
     }
     else if (nr[i].type == "fixed_expense"){
-      fixed_expense += nr[i].amount;
-      total_expense += nr[i].amount;
+      fixed_expense -= nr[i].amount;
+      total_expense -= nr[i].amount;
     }
     else if (nr[i].type == "commodity_expense"){
-      commodity_expense += nr[i].amount;
-      total_expense += nr[i].amount;
+      commodity_expense -= nr[i].amount;
+      total_expense -= nr[i].amount;
     }
     else if (nr[i].type == "entertainment_expense"){
-      entertainment_expense += nr[i].amount;
-      total_expense += nr[i].amount;
+      entertainment_expense -= nr[i].amount;
+      total_expense -= nr[i].amount;
     }
     else if (nr[i].type == "earned_income"){
       earned_income += nr[i].amount;
@@ -650,8 +650,8 @@ void monthly_statement(Record ar[], int rnum){
     }
   }
   for (int i = 0; i < j; i++){
-    if (nr[i].account.name == "credit card"){
-      debt_expense += nr[i].amount;
+    if (nr[i].account.name == "credit_card"){
+      debt_expense -= nr[i].amount;
     }
   }
   //calculate total amount of different types.
@@ -667,7 +667,7 @@ void monthly_statement(Record ar[], int rnum){
   }
 
   fout << fixed << setprecision(2);
-  fout << "******** Monthli Statement ********" << endl;
+  fout << "******** Monthly Statement ********" << endl;
   fout << "********** " << year << ", " << month << " **********" << endl;
 
   fout << "Income: " << endl;
