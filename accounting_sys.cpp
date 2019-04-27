@@ -14,7 +14,7 @@ struct Budget{
 }
 
 class User{
-  //difine a User class storing user's username,password and monthly budget.
+  //difine a User class storing user's username,password and budget.
 public:
   bool user_login();
   void set_password();
@@ -445,6 +445,7 @@ void add_record(Record ar[], Account ac[], int &rnum , User user){
         user.check_budget();
     }
   }
+  //check budget.
 }
 
 void sort_record(Record ar[], int rnum){
@@ -735,7 +736,9 @@ void financial_analysis(Record ar[], int rnum){
       j++;
     }
   }
+    
   //get all records of the exact month.
+    
   double total_expense = 0, food_expense = 0;
   double total_income = 0, earned_income = 0, portfolio_income = 0, passive_income = 0, debt_expense = 0;
   for (int i = 0; i < j; i++){
@@ -762,6 +765,7 @@ void financial_analysis(Record ar[], int rnum){
     }
   }
 
+  //calculate total amount of different types.
 
   string filename = "financial_analysis_" + year + "_" + month + ".txt";
   ofstream fout;
@@ -777,9 +781,10 @@ void financial_analysis(Record ar[], int rnum){
     else if(total_income==0){
         fout<<"Total income = 0. Unable to analyse."
     }
-    else{
-  //calculate total amount of different types.
+    //make sure that total expense and total income are not equal to zero (else may cause 'divided by zero')
     
+    else{
+  
   double food_ratio = food_expense / total_expense * 100;
   double debt_ratio = debt_expense / total_expense * 100;
   double expenses_ratio = total_expense / total_income * 100;
@@ -787,7 +792,7 @@ void financial_analysis(Record ar[], int rnum){
   //calculate ratios.
   
   fout << fixed << setprecision(2);
-  fout << "******** Monthli Statement ********" << endl;
+  fout << "******** Monthly Statement ********" << endl;
   fout << "********** " << year << ", " << month << " **********" << endl;
   fout << endl;
   fout << "Liability ratio = " << debt_ratio << '%' << endl;
