@@ -1,4 +1,4 @@
-accounting.o:accounting_sys.cpp account.h budget.h date.h record.h
+accounting_sys.o:accounting_sys.cpp account.h budget.h date.h record.h
 	g++ -c accounting_sys.cpp
 date.o:date.cpp date.h
 	g++ -c date.cpp
