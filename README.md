@@ -18,7 +18,7 @@
 ```
 user_login
 ```
-Users need to log in using their ID and passwords before entering the system for security. User information is stored in a file “user_info.txt”(it is unreadable to the user).
+Users need input their ID and passwords to log in before entering the system for security. (They only have 3 attempts to enter the password.) User information is stored in a file “user_info.txt”(it is unreadable to the user). For this system we assume that there is only one user whose name is Kit.
 
 ```
 show_records
@@ -29,13 +29,13 @@ Print all records.
 add_record
 ```
 Add one record of income / expense to the system.
-(Notice: the format of date should be like: 5/4/2019)
+(Notice: the format of date input should be like: 5/4/2019)
 (Notice: the input date should be in order as assumption.)
 
 ```
 edit_record
 ```
-Allow users to edit one record in the system.
+Allow users to edit one record in the system. The date, type, account, amount and notes all are able to be edited.
 
 ```
 delete_record
@@ -61,7 +61,7 @@ Sort the records by date or amount.
 ```
 set_password
 ```
-Allow users change passwords.
+Allow users change passwords. The password will be stored in the "user_info.txt" when the user log out.
 
 ```
 monthly_statement
