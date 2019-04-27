@@ -1,0 +1,69 @@
+//case 1 (log in)
+input: Kit 000000 source.txt
+output: (the choice menu)
+
+
+//case 2 (add record)(after login)
+input: 2 30/4/2019 1 1 1 100 dinner
+output:
+      Date: 30/4/2019
+      Type: food_expense
+      Account: cash
+      Amount: -100
+      Note: dinner
+      1 record added.
+
+
+//case 3 (edit record)(after login)
+input: 3 1 Y 15/4/2019 N N N
+ouput:
+    (list all records)
+    Please choose the record to edit:
+    (...)
+    Modify completed!
+
+
+//case 4 (delete record)(after login)
+input: 4 3 Y
+output:
+    (list all records)
+    (...)
+    Record 3 deleted.
+
+
+//case 5 (set budget)(after login)
+input: 5 20000
+output: budget set up.
+      (if the expenses of the month have already reached the budget then will ouput:
+      Attention!  You have already spend xxx which is over your budget.")
+
+
+//case 6 (search records)(after login)
+input: 6 2 1 1
+output: (show all records whose type is food_expense and show the total number.)
+
+
+//case 7 (sort records)(after login)
+input: 7 2
+output: nothing
+      (the records will then change orders. Smaller amount first.)
+
+
+//case 8 (change password)(after login)
+input: 8 000000 123456 123456
+ouput: Password set successfully.
+
+//case 9 (Show monthly statement)(after login)
+input: 9 2019 4
+output: Monthly statement has successfully stored in statement_of_2019_4.txt!
+
+
+//case 10 (Show financial analysis)(after login)
+input: 10 2019 4
+output: Financial analysis has successfully stored in financial_analysis_2019_4.txt!
+
+
+//case 11 (quit)
+input: 11
+output: Goodbye!
+(all records will be stored in "source.txt" and user information will be stored in "user_info.txt")
