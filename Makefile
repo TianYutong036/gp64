@@ -1,5 +1,8 @@
 date.o:date.cpp date.h
 	g++ -c date.cpp
-	
-accounting:accounting_sys.cpp date.o record.h budget.h account.h
-	g++ accounting_sys.cpp date.o -o accounting
+
+user.o:user.cpp user.h
+	g++ -c user.cpp
+
+accounting:accounting_sys.cpp user.o date.o record.h budget.h account.h
+	g++ accounting_sys.cpp user.o date.o -o accounting
