@@ -1,2 +1,10 @@
 20 4 2019 food_expense credit_card -100 dinner
-15 4 2019 food_expense credit_card -200.5 supermarket
+21 4 2019 commodity_expense credit_card -15000 cloth
+21 4 2019 fixed_expense credit_card -200 rent
+22 4 2019 earned_income cash 5000 salary
+24 4 2019 portfolio_income bank_card 2000 e-bay
+28 4 2019 commodity_expense bank_card -2000 furniture
+28 4 2019 entertainment_expense cash -5000 travel
+28 4 2019 passive_income credit_card 400 rent
+29 4 2019 food_expense credit_card -200 lunch
+29 4 2019 commodity_expense bank_card -200 0
