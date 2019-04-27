@@ -1,0 +1,11 @@
+******** Financial Analysis ********
+************* 2019 , 4 *************
+
+Liability ratio = 17.71%
+Liability ratio is normal. You may not face debt risk!
+
+Engel Ratio = 13.71%
+Congratulations! You are living a wealthy life!
+
+Expense ratio = 118.24%
+Spent too much! You need to save money!
