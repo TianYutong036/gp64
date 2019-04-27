@@ -586,12 +586,12 @@ void monthly_statement(Record ar[], int rnum){
 
     fout << left;
     fout << setfill('-');
-    fout << setw(20) <<"  Earned income " << earned_income << "   " << earned_ratio << '%' << endl;
-    fout << setw(20) <<"  Portfolio income " << portfolio_income << "   " << portfolio_ratio << '%' << endl;
-    fout << setw(20) <<"  Passive Earned income " << passive_income << "   " << passive_ratio << '%' << endl;
+    fout << setw(30) <<"  Earned income " << earned_income << "   " << earned_ratio << '%' << endl;
+    fout << setw(30) <<"  Portfolio income " << portfolio_income << "   " << portfolio_ratio << '%' << endl;
+    fout << setw(30) <<"  Passive Earned income " << passive_income << "   " << passive_ratio << '%' << endl;
   }
 
-  fout << setw(20) <<"  Total income " << total_income << endl;
+  fout << setw(30) <<"  Total income " << total_income << endl;
   fout << endl;
 
   fout << "Expenses: " << endl;
@@ -604,24 +604,24 @@ void monthly_statement(Record ar[], int rnum){
 
       fout << left;
       fout << setfill('-');
-      fout << setw(20) <<"  Food expense " << food_expense << "   " << food_ratio << '%' << endl;
-      fout << setw(20) <<"  Fixed expense " << fixed_expense << "   " << fixed_ratio << '%' << endl;
-      fout << setw(20) <<"  Commodity expense " << commodity_expense << "   " << commodity_ratio << '%' << endl;
-      fout << setw(20) <<"  Entertainment expense " << entertainment_expense << "   " << entertainment_ratio << '%' << endl;
+      fout << setw(30) <<"  Food expense " << food_expense << "   " << food_ratio << '%' << endl;
+      fout << setw(30) <<"  Fixed expense " << fixed_expense << "   " << fixed_ratio << '%' << endl;
+      fout << setw(30) <<"  Commodity expense " << commodity_expense << "   " << commodity_ratio << '%' << endl;
+      fout << setw(30) <<"  Entertainment expense " << entertainment_expense << "   " << entertainment_ratio << '%' << endl;
     }
 
-  fout << setw(20) <<"  Total expense " << total_expense << endl;
+  fout << setw(30) <<"  Total expense " << total_expense << endl;
   fout << endl;
 
   if(total_expense!=0){
     double debt_ratio = debt_expense / total_expense * 100;
-    fout << setw(20) <<"  Expense on debt " << debt_expense << "   " << debt_ratio << '%' << endl;
+    fout << setw(30) <<"  Expense on debt " << debt_expense << "   " << debt_ratio << '%' << endl;
     fout << endl;
   }
 
   if(total_income!=0){
     double expenses_ratio = total_expense / total_income * 100;
-    fout << setw(20) <<"  Expense over income " << expenses_ratio << '%' << endl;
+    fout << setw(30) <<"  Expense over income " << expenses_ratio << '%' << endl;
   }
 
   fout.close();
