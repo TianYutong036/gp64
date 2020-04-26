@@ -821,7 +821,7 @@ int main(){
           financial_analysis(ar, rnum);
           break;
         default:
-          cout << "Invalid input!" << endl;
+          cout << "Invalid input!!" << endl;
         }
   choice = selection_menu();
     }
